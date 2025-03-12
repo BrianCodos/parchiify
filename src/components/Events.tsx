@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
-import { useDatabase } from '../context/DatabaseContext';
-import { Event } from '../services/database/types';
 import { VENUES, MOODS } from '../constants/events';
+
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  venue: string;
+  date: string;
+  moods: string[];
+  price: number;
+}
 
 interface EventFormData {
   title: string;
@@ -15,11 +23,19 @@ interface EventFormData {
 
 const Events = () => {
   const { showNotification } = useNotification();
-  const { db, isInitialized } = useDatabase();
   const [showForm, setShowForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [events, setEvents] = useState<Event[]>([
+    {
+      id: '1',
+      title: 'Summer Music Festival',
+      description: 'A **fantastic** music festival with *amazing* artists',
+      venue: 'Central Park',
+      date: '2024-07-15',
+      moods: ['party', 'cultural'],
+      price: 49.99,
+    },
+  ]);
 
   const [formData, setFormData] = useState<EventFormData>({
     title: '',
@@ -30,64 +46,34 @@ const Events = () => {
     price: '',
   });
 
-  // Load events from database
-  useEffect(() => {
-    const loadEvents = async () => {
-      if (!isInitialized) return;
-      try {
-        const loadedEvents = await db.getEvents();
-        setEvents(loadedEvents);
-      } catch (error) {
-        showNotification('error', 'Failed to load events');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadEvents();
-  }, [db, isInitialized]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const newEvent = await db.createEvent({
-        title: formData.title,
-        description: formData.description,
-        venue: formData.venue,
-        date: formData.date,
-        moods: formData.moods,
-        price: parseFloat(formData.price),
-      });
-
-      setEvents([...events, newEvent]);
-      setShowForm(false);
-      setFormData({
-        title: '',
-        description: '',
-        venue: '',
-        date: '',
-        moods: [],
-        price: '',
-      });
-      showNotification('success', 'Event created successfully!');
-    } catch (error) {
-      showNotification('error', 'Failed to create event');
-    }
+    const newEvent: Event = {
+      id: Date.now().toString(),
+      ...formData,
+      price: parseFloat(formData.price),
+    };
+    setEvents([...events, newEvent]);
+    setShowForm(false);
+    setFormData({
+      title: '',
+      description: '',
+      venue: '',
+      date: '',
+      moods: [],
+      price: '',
+    });
+    showNotification('success', 'Event created successfully!');
   };
 
   const handleDelete = (id: string) => {
     setShowDeleteConfirm(id);
   };
 
-  const confirmDelete = async (id: string) => {
-    try {
-      await db.deleteEvent(id);
-      setEvents(events.filter(event => event.id !== id));
-      setShowDeleteConfirm(null);
-      showNotification('error', 'Event deleted successfully');
-    } catch (error) {
-      showNotification('error', 'Failed to delete event');
-    }
+  const confirmDelete = (id: string) => {
+    setEvents(events.filter(event => event.id !== id));
+    setShowDeleteConfirm(null);
+    showNotification('error', 'Event deleted successfully');
   };
 
   const formatDescription = (description: string) => {
@@ -96,21 +82,13 @@ const Events = () => {
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>');
     
-    // Then truncate to 200 words for display
+    // Then truncate to 30 words for display
     const words = formattedText.split(/\s+/);
-    if (words.length > 200) {
+    if (words.length > 30) {
       return words.slice(0, 30).join(' ') + ' ...';
     }
     return formattedText;
   };
-
-  if (!isInitialized || isLoading) {
-    return (
-      <div className="p-8 flex items-center justify-center">
-        <div className="text-dark-text">Loading events...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-8">
