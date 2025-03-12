@@ -1,47 +1,64 @@
 import React from 'react';
 
-const Sidebar = () => {
-  const primaryMenu = [
-    { name: 'Dashboard', icon: '📊' },
-    { name: 'Library', icon: '📚' },
-    { name: 'Playlists', icon: '🎵' },
-  ];
+interface MenuItem {
+  name: string;
+  icon: string;
+  onClick?: () => void;
+  isActive?: boolean;
+}
 
-  const secondaryMenu = [
-    { name: 'Settings', icon: '⚙️' },
-    { name: 'Help', icon: '❓' },
-    { name: 'Profile', icon: '👤' },
-  ];
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+}
 
-  const MenuItem = ({ name, icon }: { name: string; icon: string }) => (
-    <div className="flex items-center space-x-3 px-4 py-3 text-dark-text-secondary hover:bg-dark-accent hover:text-dark-text rounded-lg cursor-pointer transition-colors duration-200">
+interface SidebarProps {
+  logo?: React.ReactNode;
+  sections: MenuSection[];
+  bottomContent?: React.ReactNode;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ logo, sections, bottomContent }) => {
+  const MenuItem = ({ name, icon, onClick, isActive }: MenuItem) => (
+    <div
+      onClick={onClick}
+      className={`flex items-center space-x-3 px-4 py-3 rounded-lg cursor-pointer transition-colors duration-200
+                ${isActive 
+                  ? 'bg-accent-primary text-white' 
+                  : 'text-dark-text-secondary hover:bg-dark-accent hover:text-dark-text'}`}
+    >
       <span>{icon}</span>
       <span>{name}</span>
     </div>
   );
 
   return (
-    <div className="w-1/5 max-w-[250px] h-screen bg-dark-secondary flex flex-col">
+    <div className="w-64 h-screen bg-dark-secondary flex flex-col">
       {/* Logo */}
       <div className="p-6 flex justify-center">
-        <div className="text-2xl font-bold text-dark-text">Parchify</div>
+        {logo || <div className="text-2xl font-bold text-dark-text">Parchify</div>}
       </div>
 
-      {/* Primary Menu */}
-      <div className="px-2 py-4 flex-1">
-        <div className="mb-2 px-4 text-sm font-semibold text-dark-text-secondary">MAIN MENU</div>
-        {primaryMenu.map((item) => (
-          <MenuItem key={item.name} {...item} />
+      {/* Menu Sections */}
+      <div className="flex-1 overflow-y-auto">
+        {sections.map((section, index) => (
+          <div key={section.title} className={`px-2 py-4 ${index > 0 ? 'border-t border-dark-accent' : ''}`}>
+            <div className="mb-2 px-4 text-sm font-semibold text-dark-text-secondary">
+              {section.title}
+            </div>
+            {section.items.map((item) => (
+              <MenuItem key={item.name} {...item} />
+            ))}
+          </div>
         ))}
       </div>
 
-      {/* Secondary Menu */}
-      <div className="px-2 py-4 border-t border-dark-accent">
-        <div className="mb-2 px-4 text-sm font-semibold text-dark-text-secondary">SETTINGS</div>
-        {secondaryMenu.map((item) => (
-          <MenuItem key={item.name} {...item} />
-        ))}
-      </div>
+      {/* Bottom Content */}
+      {bottomContent && (
+        <div className="px-2 py-4 border-t border-dark-accent">
+          {bottomContent}
+        </div>
+      )}
     </div>
   );
 };
