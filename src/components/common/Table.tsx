@@ -2,9 +2,9 @@ import React from 'react';
 
 export interface Column<T> {
   header: string;
-  key: keyof T | string;
-  render?: (item: T) => React.ReactNode;
+  key: keyof T;
   className?: string;
+  render?: (item: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -15,7 +15,7 @@ interface TableProps<T> {
   rowClassName?: string | ((item: T) => string);
 }
 
-export function Table<T>({
+export function Table<T extends { id: string }>({
   data,
   columns,
   onRowClick,
@@ -30,7 +30,7 @@ export function Table<T>({
             <tr className="bg-dashboard-accent text-dark-text text-left">
               {columns.map((column) => (
                 <th
-                  key={column.key.toString()}
+                  key={column.key as string}
                   className={`px-6 py-4 ${column.className || ''}`}
                 >
                   {column.header}
@@ -39,9 +39,9 @@ export function Table<T>({
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => (
+            {data.map((item) => (
               <tr
-                key={index}
+                key={item.id}
                 onClick={() => onRowClick?.(item)}
                 className={`border-t border-dark-accent hover:bg-dark-accent/10 transition-colors duration-200 
                   ${typeof rowClassName === 'function' ? rowClassName(item) : rowClassName}
@@ -49,12 +49,10 @@ export function Table<T>({
               >
                 {columns.map((column) => (
                   <td
-                    key={`${index}-${column.key.toString()}`}
+                    key={`${item.id}-${column.key as string}`}
                     className={`px-6 py-4 ${column.className || ''}`}
                   >
-                    {column.render
-                      ? column.render(item)
-                      : (item[column.key as keyof T] as React.ReactNode)}
+                    {column.render ? column.render(item) : String(item[column.key])}
                   </td>
                 ))}
               </tr>

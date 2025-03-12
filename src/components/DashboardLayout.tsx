@@ -2,6 +2,7 @@ import React from 'react';
 import Dashboard from './Dashboard';
 import Events from './Events';
 import Moods from './Moods';
+import Promotions from './Promotions';
 
 interface DashboardLayoutProps {
   activeView: string;
@@ -16,6 +17,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ activeView }) => {
         return <Events />;
       case 'mood':
         return <Moods />;
+      case 'promotions':
+        return <Promotions />;
       default:
         return (
           <div className="p-8">

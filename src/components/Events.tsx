@@ -3,6 +3,7 @@ import { useNotification } from '../context/NotificationContext';
 import { VENUES, MOODS } from '../constants/events';
 import { Table, Column } from './common/Table';
 import { PageHeader } from './common/PageHeader';
+import EventDetails from './EventDetails';
 
 interface Event {
   id: string;
@@ -11,7 +12,9 @@ interface Event {
   venue: string;
   date: string;
   moods: string[];
-  price: number;
+  isFree: boolean;
+  price?: number;
+  imageUrl?: string;
 }
 
 interface EventFormData {
@@ -20,13 +23,16 @@ interface EventFormData {
   venue: string;
   date: string;
   moods: string[];
+  isFree: boolean;
   price: string;
+  imageUrl?: string;
 }
 
 const Events = () => {
   const { showNotification } = useNotification();
   const [showForm, setShowForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [events, setEvents] = useState<Event[]>([
     {
       id: '1',
@@ -35,7 +41,9 @@ const Events = () => {
       venue: 'Central Park',
       date: '2024-07-15',
       moods: ['party', 'cultural'],
+      isFree: false,
       price: 49.99,
+      imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800',
     },
   ]);
 
@@ -45,7 +53,9 @@ const Events = () => {
     venue: '',
     date: '',
     moods: [],
+    isFree: false,
     price: '',
+    imageUrl: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,7 +63,7 @@ const Events = () => {
     const newEvent: Event = {
       id: Date.now().toString(),
       ...formData,
-      price: parseFloat(formData.price),
+      price: formData.isFree ? undefined : parseFloat(formData.price),
     };
     setEvents([...events, newEvent]);
     setShowForm(false);
@@ -63,7 +73,9 @@ const Events = () => {
       venue: '',
       date: '',
       moods: [],
+      isFree: false,
       price: '',
+      imageUrl: '',
     });
     showNotification('success', 'Event created successfully!');
   };
@@ -93,6 +105,26 @@ const Events = () => {
   };
 
   const columns = useMemo<Column<Event>[]>(() => [
+    {
+      header: 'Image',
+      key: 'imageUrl',
+      className: 'w-24',
+      render: (event) => (
+        <div className="w-20 h-20 rounded-lg overflow-hidden">
+          {event.imageUrl ? (
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-dark-primary flex items-center justify-center">
+              <span className="text-2xl">🎉</span>
+            </div>
+          )}
+        </div>
+      ),
+    },
     {
       header: 'Title',
       key: 'title',
@@ -137,14 +169,22 @@ const Events = () => {
       header: 'Price',
       key: 'price',
       className: 'text-dark-text',
-      render: (event) => `$${event.price.toFixed(2)}`
+      render: (event) => event.isFree ? 'Free' : `$${event.price?.toFixed(2)}`
     },
     {
       header: 'Actions',
-      key: 'actions',
+      key: 'id' as keyof Event,
       render: (event) => (
         <div className="flex items-center gap-3 text-dark-text-secondary">
-          <button className="hover:text-dashboard-light transition-colors">👁️</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedEvent(event);
+            }}
+            className="hover:text-dashboard-light transition-colors"
+          >
+            👁️
+          </button>
           <button className="hover:text-dashboard-light transition-colors">✏️</button>
           <button
             onClick={(e) => {
@@ -168,6 +208,12 @@ const Events = () => {
     }
   ], []);
 
+  const handleModalClick = (e: React.MouseEvent, onClose: () => void) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
     <div className="p-8">
       <PageHeader 
@@ -177,12 +223,18 @@ const Events = () => {
 
       {/* Event Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={(e) => handleModalClick(e, () => setShowForm(false))}
+        >
           <div className="bg-dark-secondary rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-dark-text">Create New Event</h2>
               <button
-                onClick={() => setShowForm(false)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowForm(false);
+                }}
                 className="text-dark-text-secondary hover:text-dark-text"
               >
                 ✕
@@ -201,6 +253,32 @@ const Events = () => {
                          focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
                   required
                 />
+              </div>
+
+              {/* Image URL */}
+              <div>
+                <label className="block text-dark-text-secondary mb-2">Image URL</label>
+                <input
+                  type="url"
+                  value={formData.imageUrl}
+                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                  className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
+                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                  placeholder="https://example.com/image.jpg"
+                />
+                {formData.imageUrl && (
+                  <div className="mt-2 relative w-32 h-32 rounded-lg overflow-hidden">
+                    <img
+                      src={formData.imageUrl}
+                      alt="Event preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Description */}
@@ -257,7 +335,8 @@ const Events = () => {
                     <button
                       key={mood}
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         const newMoods = formData.moods.includes(mood)
                           ? formData.moods.filter((m) => m !== mood)
                           : [...formData.moods, mood];
@@ -276,25 +355,55 @@ const Events = () => {
                 </div>
               </div>
 
-              {/* Price */}
-              <div>
-                <label className="block text-dark-text-secondary mb-2">Price</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
-                  required
-                />
+              {/* Price Section */}
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="isFree"
+                    checked={formData.isFree}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setFormData({
+                        ...formData,
+                        isFree: e.target.checked,
+                        price: e.target.checked ? '' : formData.price
+                      });
+                    }}
+                    className="w-4 h-4 text-dashboard-primary bg-dark-primary border-dark-accent rounded focus:ring-dashboard-primary"
+                  />
+                  <label htmlFor="isFree" className="ml-2 text-dark-text-secondary">
+                    This is a free event
+                  </label>
+                </div>
+
+                {!formData.isFree && (
+                  <div>
+                    <label className="block text-dark-text-secondary mb-2">Price</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.price}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setFormData({ ...formData, price: e.target.value });
+                      }}
+                      className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
+                             focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                      required={!formData.isFree}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end gap-4">
                 <button
                   type="button"
-                  onClick={() => setShowForm(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowForm(false);
+                  }}
                   className="px-6 py-2 text-dark-text-secondary hover:text-dark-text"
                 >
                   Cancel
@@ -314,7 +423,10 @@ const Events = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={(e) => handleModalClick(e, () => setShowDeleteConfirm(null))}
+        >
           <div className="bg-dark-secondary rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold text-dark-text mb-4">Confirm Delete</h2>
             <p className="text-dark-text-secondary mb-6">
@@ -322,13 +434,19 @@ const Events = () => {
             </p>
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => setShowDeleteConfirm(null)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirm(null);
+                }}
                 className="px-4 py-2 text-dark-text-secondary hover:text-dark-text"
               >
                 Cancel
               </button>
               <button
-                onClick={() => confirmDelete(showDeleteConfirm)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete(showDeleteConfirm);
+                }}
                 className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
               >
                 Delete
@@ -338,10 +456,18 @@ const Events = () => {
         </div>
       )}
 
+      {/* Event Details Modal */}
+      {selectedEvent && (
+        <EventDetails
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
+
       <Table
         data={events}
         columns={columns}
-        onRowClick={(event) => console.log('Clicked event:', event)}
+        onRowClick={(event) => setSelectedEvent(event)}
       />
     </div>
   );
