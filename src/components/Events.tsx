@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import { VENUES, MOODS } from '../constants/events';
+import { Table, Column } from './common/Table';
+import { PageHeader } from './common/PageHeader';
 
 interface Event {
   id: string;
@@ -90,20 +92,88 @@ const Events = () => {
     return formattedText;
   };
 
+  const columns = useMemo<Column<Event>[]>(() => [
+    {
+      header: 'Title',
+      key: 'title',
+      className: 'text-dark-text'
+    },
+    {
+      header: 'Description',
+      key: 'description',
+      className: 'text-dark-text-secondary',
+      render: (event) => (
+        <div dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }} />
+      )
+    },
+    {
+      header: 'Venue',
+      key: 'venue',
+      className: 'text-dark-text'
+    },
+    {
+      header: 'Date',
+      key: 'date',
+      className: 'text-dark-text',
+      render: (event) => new Date(event.date).toLocaleDateString()
+    },
+    {
+      header: 'Moods',
+      key: 'moods',
+      render: (event) => (
+        <div className="flex flex-wrap gap-1">
+          {event.moods.map((mood) => (
+            <span
+              key={mood}
+              className="px-2 py-1 bg-dashboard-primary text-white text-xs rounded-full"
+            >
+              {mood}
+            </span>
+          ))}
+        </div>
+      )
+    },
+    {
+      header: 'Price',
+      key: 'price',
+      className: 'text-dark-text',
+      render: (event) => `$${event.price.toFixed(2)}`
+    },
+    {
+      header: 'Actions',
+      key: 'actions',
+      render: (event) => (
+        <div className="flex items-center gap-3 text-dark-text-secondary">
+          <button className="hover:text-dashboard-light transition-colors">👁️</button>
+          <button className="hover:text-dashboard-light transition-colors">✏️</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(event.id);
+            }}
+            className="hover:text-red-500 transition-colors"
+          >
+            🗑️
+          </button>
+        </div>
+      )
+    }
+  ], []);
+
+  const headerActions = useMemo(() => [
+    {
+      label: 'Create Event',
+      icon: '➕',
+      onClick: () => setShowForm(true),
+    }
+  ], []);
+
   return (
     <div className="p-8">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-dark-text">Events</h1>
-        <button
-          onClick={() => setShowForm(true)}
-          className="px-6 py-3 bg-dashboard-primary hover:bg-dashboard-hover text-white
-                   rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
-        >
-          <span>➕</span>
-          Create Event
-        </button>
-      </div>
+      <PageHeader 
+        title="Events"
+        actions={headerActions}
+      />
 
       {/* Event Form Modal */}
       {showForm && (
@@ -268,65 +338,11 @@ const Events = () => {
         </div>
       )}
 
-      {/* Events Table */}
-      <div className="bg-dark-secondary rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-dashboard-accent text-dark-text text-left">
-                <th className="px-6 py-4">Title</th>
-                <th className="px-6 py-4">Description</th>
-                <th className="px-6 py-4">Venue</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Moods</th>
-                <th className="px-6 py-4">Price</th>
-                <th className="px-6 py-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event) => (
-                <tr key={event.id} className="border-t border-dark-accent">
-                  <td className="px-6 py-4 text-dark-text">{event.title}</td>
-                  <td className="px-6 py-4 text-dark-text-secondary">
-                    <div dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }} />
-                  </td>
-                  <td className="px-6 py-4 text-dark-text">{event.venue}</td>
-                  <td className="px-6 py-4 text-dark-text">
-                    {new Date(event.date).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex flex-wrap gap-1">
-                      {event.moods.map((mood) => (
-                        <span
-                          key={mood}
-                          className="px-2 py-1 bg-dashboard-primary text-white text-xs rounded-full"
-                        >
-                          {mood}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-dark-text">
-                    ${event.price.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3 text-dark-text-secondary">
-                      <button className="hover:text-dashboard-light transition-colors">👁️</button>
-                      <button className="hover:text-dashboard-light transition-colors">✏️</button>
-                      <button
-                        onClick={() => handleDelete(event.id)}
-                        className="hover:text-red-500 transition-colors"
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <Table
+        data={events}
+        columns={columns}
+        onRowClick={(event) => console.log('Clicked event:', event)}
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from './Dashboard';
 import Events from './Events';
+import Moods from './Moods';
 
 interface DashboardLayoutProps {
   activeView: string;
@@ -13,6 +14,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ activeView }) => {
         return <Dashboard />;
       case 'events':
         return <Events />;
+      case 'mood':
+        return <Moods />;
       default:
         return (
           <div className="p-8">
@@ -28,7 +31,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ activeView }) => {
   };
 
   return (
-    <div className="flex-1 p-8">
+    <div className="flex-1">
       {renderContent()}
     </div>
   );
