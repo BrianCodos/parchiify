@@ -29,7 +29,22 @@ export default {
           hover: '#6366f1', // indigo-500
           light: '#818cf8', // indigo-400
         }
-      }
+      },
+      keyframes: {
+        'slide-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(100%)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        }
+      },
+      animation: {
+        'slide-up': 'slide-up 0.3s ease-out',
+      },
     },
   },
   plugins: [],

@@ -1,14 +1,8 @@
-import React, { useState } from 'react';
-
-interface Event {
-  id: string;
-  title: string;
-  description: string;
-  venue: string;
-  date: string;
-  moods: string[];
-  price: number;
-}
+import React, { useState, useEffect } from 'react';
+import { useNotification } from '../context/NotificationContext';
+import { useDatabase } from '../context/DatabaseContext';
+import { Event } from '../services/database/types';
+import { VENUES, MOODS } from '../constants/events';
 
 interface EventFormData {
   title: string;
@@ -20,18 +14,12 @@ interface EventFormData {
 }
 
 const Events = () => {
+  const { showNotification } = useNotification();
+  const { db, isInitialized } = useDatabase();
   const [showForm, setShowForm] = useState(false);
-  const [events, setEvents] = useState<Event[]>([
-    {
-      id: '1',
-      title: 'Summer Music Festival',
-      description: 'A **fantastic** music festival with *amazing* artists',
-      venue: 'Central Park',
-      date: '2024-07-15',
-      moods: ['party', 'cultural'],
-      price: 49.99,
-    },
-  ]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState<EventFormData>({
     title: '',
@@ -42,38 +30,87 @@ const Events = () => {
     price: '',
   });
 
-  // Sample data (in a real app, these would come from your backend)
-  const venues = ['Central Park', 'City Hall', 'Beach Club', 'Art Gallery'];
-  const availableMoods = ['party', 'cultural', 'family', 'romantic', 'adventure'];
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newEvent: Event = {
-      id: Date.now().toString(),
-      ...formData,
-      price: parseFloat(formData.price),
+  // Load events from database
+  useEffect(() => {
+    const loadEvents = async () => {
+      if (!isInitialized) return;
+      try {
+        const loadedEvents = await db.getEvents();
+        setEvents(loadedEvents);
+      } catch (error) {
+        showNotification('error', 'Failed to load events');
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setEvents([...events, newEvent]);
-    setShowForm(false);
-    setFormData({
-      title: '',
-      description: '',
-      venue: '',
-      date: '',
-      moods: [],
-      price: '',
-    });
+
+    loadEvents();
+  }, [db, isInitialized]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const newEvent = await db.createEvent({
+        title: formData.title,
+        description: formData.description,
+        venue: formData.venue,
+        date: formData.date,
+        moods: formData.moods,
+        price: parseFloat(formData.price),
+      });
+
+      setEvents([...events, newEvent]);
+      setShowForm(false);
+      setFormData({
+        title: '',
+        description: '',
+        venue: '',
+        date: '',
+        moods: [],
+        price: '',
+      });
+      showNotification('success', 'Event created successfully!');
+    } catch (error) {
+      showNotification('error', 'Failed to create event');
+    }
   };
 
   const handleDelete = (id: string) => {
-    setEvents(events.filter(event => event.id !== id));
+    setShowDeleteConfirm(id);
+  };
+
+  const confirmDelete = async (id: string) => {
+    try {
+      await db.deleteEvent(id);
+      setEvents(events.filter(event => event.id !== id));
+      setShowDeleteConfirm(null);
+      showNotification('error', 'Event deleted successfully');
+    } catch (error) {
+      showNotification('error', 'Failed to delete event');
+    }
   };
 
   const formatDescription = (description: string) => {
-    return description
+    // First apply markdown formatting
+    const formattedText = description
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Then truncate to 200 words for display
+    const words = formattedText.split(/\s+/);
+    if (words.length > 200) {
+      return words.slice(0, 30).join(' ') + ' ...';
+    }
+    return formattedText;
   };
+
+  if (!isInitialized || isLoading) {
+    return (
+      <div className="p-8 flex items-center justify-center">
+        <div className="text-dark-text">Loading events...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -92,8 +129,8 @@ const Events = () => {
 
       {/* Event Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-dark-secondary rounded-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-dark-secondary rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-dark-text">Create New Event</h2>
               <button
@@ -143,7 +180,7 @@ const Events = () => {
                   required
                 >
                   <option value="">Select a venue</option>
-                  {venues.map((venue) => (
+                  {VENUES.map((venue) => (
                     <option key={venue} value={venue}>
                       {venue}
                     </option>
@@ -168,7 +205,7 @@ const Events = () => {
               <div>
                 <label className="block text-dark-text-secondary mb-2">Moods</label>
                 <div className="flex flex-wrap gap-2">
-                  {availableMoods.map((mood) => (
+                  {MOODS.map((mood) => (
                     <button
                       key={mood}
                       type="button"
@@ -227,62 +264,90 @@ const Events = () => {
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-dark-secondary rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-dark-text mb-4">Confirm Delete</h2>
+            <p className="text-dark-text-secondary mb-6">
+              Are you sure you want to delete this event? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 text-dark-text-secondary hover:text-dark-text"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => confirmDelete(showDeleteConfirm)}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Events Table */}
       <div className="bg-dark-secondary rounded-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-dashboard-accent text-dark-text text-left">
-              <th className="px-6 py-4">Title</th>
-              <th className="px-6 py-4">Description</th>
-              <th className="px-6 py-4">Venue</th>
-              <th className="px-6 py-4">Date</th>
-              <th className="px-6 py-4">Moods</th>
-              <th className="px-6 py-4">Price</th>
-              <th className="px-6 py-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {events.map((event) => (
-              <tr key={event.id} className="border-t border-dark-accent">
-                <td className="px-6 py-4 text-dark-text">{event.title}</td>
-                <td className="px-6 py-4 text-dark-text-secondary">
-                  <div dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }} />
-                </td>
-                <td className="px-6 py-4 text-dark-text">{event.venue}</td>
-                <td className="px-6 py-4 text-dark-text">
-                  {new Date(event.date).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-wrap gap-1">
-                    {event.moods.map((mood) => (
-                      <span
-                        key={mood}
-                        className="px-2 py-1 bg-dashboard-primary text-white text-xs rounded-full"
-                      >
-                        {mood}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-dark-text">
-                  ${event.price.toFixed(2)}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3 text-dark-text-secondary">
-                    <button className="hover:text-dashboard-light transition-colors">👁️</button>
-                    <button className="hover:text-dashboard-light transition-colors">✏️</button>
-                    <button
-                      onClick={() => handleDelete(event.id)}
-                      className="hover:text-red-500 transition-colors"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-dashboard-accent text-dark-text text-left">
+                <th className="px-6 py-4">Title</th>
+                <th className="px-6 py-4">Description</th>
+                <th className="px-6 py-4">Venue</th>
+                <th className="px-6 py-4">Date</th>
+                <th className="px-6 py-4">Moods</th>
+                <th className="px-6 py-4">Price</th>
+                <th className="px-6 py-4">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr key={event.id} className="border-t border-dark-accent">
+                  <td className="px-6 py-4 text-dark-text">{event.title}</td>
+                  <td className="px-6 py-4 text-dark-text-secondary">
+                    <div dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }} />
+                  </td>
+                  <td className="px-6 py-4 text-dark-text">{event.venue}</td>
+                  <td className="px-6 py-4 text-dark-text">
+                    {new Date(event.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1">
+                      {event.moods.map((mood) => (
+                        <span
+                          key={mood}
+                          className="px-2 py-1 bg-dashboard-primary text-white text-xs rounded-full"
+                        >
+                          {mood}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-dark-text">
+                    ${event.price.toFixed(2)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3 text-dark-text-secondary">
+                      <button className="hover:text-dashboard-light transition-colors">👁️</button>
+                      <button className="hover:text-dashboard-light transition-colors">✏️</button>
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="hover:text-red-500 transition-colors"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
