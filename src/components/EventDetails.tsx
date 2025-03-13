@@ -6,7 +6,10 @@ interface EventDetailsProps {
     title: string;
     description: string;
     venue: string;
+    address: string;
     date: string;
+    hour: string;
+    contact: string;
     moods: string[];
     isFree: boolean;
     price?: number;
@@ -54,6 +57,16 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
           <div className="absolute bottom-0 left-0 right-0 p-8">
             <div className="flex items-end justify-between">
               <div className="space-y-2">
+                <div className={`
+                  inline-block px-4 py-2 rounded-full font-bold text-xl
+                  ${event.isFree 
+                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/50' 
+                    : 'bg-dashboard-primary text-white shadow-lg shadow-dashboard-primary/50'}
+                  transform -translate-y-4 hover:scale-105 transition-all duration-200
+                  border-2 border-white/20 backdrop-blur-sm
+                `}>
+                  {event.isFree ? '✨ Free' : `Cover: $${event.price?.toFixed(2)}`}
+                </div>
                 <h1 className="text-4xl font-bold text-white drop-shadow-lg">{event.title}</h1>
                 <div className="flex items-center gap-2">
                   <span className="text-dashboard-primary text-xl">📅</span>
@@ -64,18 +77,24 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
                       day: 'numeric',
                       year: 'numeric'
                     })}
+                    {' '}at{' '}
+                    {event.hour}
                   </time>
                 </div>
               </div>
-              <div className={`
-                px-6 py-3 rounded-full font-bold text-2xl
-                ${event.isFree 
-                  ? 'bg-green-500 text-white shadow-lg shadow-green-500/50' 
-                  : 'bg-dashboard-primary text-white shadow-lg shadow-dashboard-primary/50'}
-                transform -translate-y-4 hover:scale-105 transition-all duration-200
-                border-2 border-white/20 backdrop-blur-sm
-              `}>
-                {event.isFree ? '✨ Free' : `$${event.price?.toFixed(2)}`}
+              <div className="flex items-center">
+                <a
+                  href={event.contact}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="px-6 py-3 rounded-full font-bold text-xl bg-white/10 text-white 
+                    hover:bg-white/20 transition-all duration-200 border-2 border-white/20 
+                    backdrop-blur-sm shadow-lg flex items-center gap-2"
+                >
+                  <span>🔗</span>
+                  <span>Contact</span>
+                </a>
               </div>
             </div>
           </div>
@@ -93,20 +112,21 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
         </div>
 
         <div className="p-8">
-          {/* Event details grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div>
-              <h2 className="text-xl font-semibold text-dark-text mb-4">Details</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-dark-text-secondary text-sm">Venue</label>
-                  <p className="text-dark-text">{event.venue}</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Place section */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <p className="text-dark-text">{event.venue}</p>
+                <div className="flex items-center gap-2 text-dark-text-secondary">
+                  <span className="text-xl">📍</span>
+                  <p className="text-sm">{event.address}</p>
                 </div>
               </div>
             </div>
 
-            <div>
-              <h2 className="text-xl font-semibold text-dark-text mb-4">Moods</h2>
+            {/* Moods section */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-medium text-dark-text-secondary uppercase tracking-wider">Moods</h2>
               <div className="flex flex-wrap gap-2">
                 {event.moods.map((mood) => (
                   <span
@@ -118,15 +138,15 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Description */}
-          <div>
-            <h2 className="text-xl font-semibold text-dark-text mb-4">About this event</h2>
-            <div
-              className="prose prose-invert max-w-none text-dark-text-secondary"
-              dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }}
-            />
+            {/* Description section */}
+            <div className="space-y-4 md:col-span-2">
+              <h2 className="text-sm font-medium text-dark-text-secondary uppercase tracking-wider">About</h2>
+              <div
+                className="prose prose-invert max-w-none text-dark-text-secondary"
+                dangerouslySetInnerHTML={{ __html: formatDescription(event.description) }}
+              />
+            </div>
           </div>
         </div>
       </div>
