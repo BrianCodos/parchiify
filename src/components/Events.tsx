@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNotification } from '../context/NotificationContext';
-import { VENUES, MOODS } from '../constants/events';
+import { PLACES, MOODS } from '../constants/events';
 import { Table, Column } from './common/Table';
 import { PageHeader } from './common/PageHeader';
 import EventDetails from './EventDetails';
@@ -10,7 +10,10 @@ interface Event {
   title: string;
   description: string;
   venue: string;
+  address: string;
   date: string;
+  hour: string;
+  contact: string;
   moods: string[];
   isFree: boolean;
   price?: number;
@@ -21,7 +24,10 @@ interface EventFormData {
   title: string;
   description: string;
   venue: string;
+  address: string;
   date: string;
+  hour: string;
+  contact: string;
   moods: string[];
   isFree: boolean;
   price: string;
@@ -39,7 +45,10 @@ const Events = () => {
       title: 'Summer Music Festival',
       description: 'A **fantastic** music festival with *amazing* artists',
       venue: 'Central Park',
+      address: '59th to 110th Street, New York, NY 10022',
       date: '2024-07-15',
+      hour: '14:00',
+      contact: 'https://twitter.com/summerfest',
       moods: ['party', 'cultural'],
       isFree: false,
       price: 49.99,
@@ -51,7 +60,10 @@ const Events = () => {
     title: '',
     description: '',
     venue: '',
+    address: '',
     date: '',
+    hour: '',
+    contact: '',
     moods: [],
     isFree: false,
     price: '',
@@ -71,7 +83,10 @@ const Events = () => {
       title: '',
       description: '',
       venue: '',
+      address: '',
       date: '',
+      hour: '',
+      contact: '',
       moods: [],
       isFree: false,
       price: '',
@@ -139,15 +154,47 @@ const Events = () => {
       )
     },
     {
-      header: 'Venue',
+      header: 'Place',
       key: 'venue',
       className: 'text-dark-text'
     },
     {
-      header: 'Date',
+      header: 'Address',
+      key: 'address',
+      className: 'text-dark-text-secondary text-sm',
+      render: (event) => (
+        <div className="flex items-center gap-1">
+          <span>📍</span>
+          <span>{event.address}</span>
+        </div>
+      )
+    },
+    {
+      header: 'Date & Time',
       key: 'date',
       className: 'text-dark-text',
-      render: (event) => new Date(event.date).toLocaleDateString()
+      render: (event) => (
+        <div className="space-y-1">
+          <div>{new Date(event.date).toLocaleDateString()}</div>
+          <div className="text-dark-text-secondary text-sm">{event.hour}</div>
+        </div>
+      )
+    },
+    {
+      header: 'Contact',
+      key: 'contact',
+      className: 'text-dark-text',
+      render: (event) => (
+        <a 
+          href={event.contact}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="text-dashboard-primary hover:underline"
+        >
+          Contact Link
+        </a>
+      )
     },
     {
       header: 'Moods',
@@ -295,9 +342,9 @@ const Events = () => {
                 />
               </div>
 
-              {/* Venue */}
+              {/* Place field */}
               <div>
-                <label className="block text-dark-text-secondary mb-2">Venue</label>
+                <label className="block text-dark-text-secondary mb-2">Place</label>
                 <select
                   value={formData.venue}
                   onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
@@ -305,26 +352,70 @@ const Events = () => {
                          focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
                   required
                 >
-                  <option value="">Select a venue</option>
-                  {VENUES.map((venue) => (
-                    <option key={venue} value={venue}>
-                      {venue}
+                  <option value="">Select a place</option>
+                  {PLACES.map((place) => (
+                    <option key={place} value={place}>
+                      {place}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Date */}
+              {/* Address field */}
               <div>
-                <label className="block text-dark-text-secondary mb-2">Date</label>
+                <label className="block text-dark-text-secondary mb-2">Address</label>
                 <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  type="text"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
                          focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                  placeholder="Enter the full address"
                   required
                 />
+              </div>
+
+              {/* Date and Hour fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-dark-text-secondary mb-2">Date</label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-dark-text-secondary mb-2">Hour</label>
+                  <input
+                    type="time"
+                    value={formData.hour}
+                    onChange={(e) => setFormData({ ...formData, hour: e.target.value })}
+                    className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Contact Link */}
+              <div>
+                <label className="block text-dark-text-secondary mb-2">Contact Link</label>
+                <div className="space-y-1">
+                  <input
+                    type="url"
+                    value={formData.contact}
+                    onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                    className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                    placeholder="https://twitter.com/youraccount"
+                    required
+                  />
+                  <p className="text-dark-text-secondary text-sm">Add your contact link (social media, website, etc.)</p>
+                </div>
               </div>
 
               {/* Moods */}
