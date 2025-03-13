@@ -43,7 +43,7 @@ const Events = () => {
     {
       id: '1',
       title: 'Summer Music Festival',
-      description: 'A **fantastic** music festival with *amazing* artists',
+      description: 'Join us for an **unforgettable evening** of live music and entertainment at our Summer Music Festival! Experience the magic as *talented artists* take the stage, performing a diverse mix of genres from indie rock to electronic beats. The festival features multiple stages, food vendors, art installations, and interactive experiences that will create memories to last a lifetime. Bring your friends and immerse yourself in the vibrant atmosphere of music, culture, and community.',
       venue: 'Central Park',
       address: '59th to 110th Street, New York, NY 10022',
       date: '2024-07-15',
@@ -52,7 +52,7 @@ const Events = () => {
       moods: ['party', 'cultural'],
       isFree: false,
       price: 49.99,
-      imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800',
+      imageUrl: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1080&h=1350&fit=crop',
     },
   ]);
 
@@ -190,7 +190,7 @@ const Events = () => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="text-dashboard-primary hover:underline"
+          className="text-green-500 hover:text-green-400 hover:underline"
         >
           Contact Link
         </a>
@@ -228,11 +228,11 @@ const Events = () => {
               e.stopPropagation();
               setSelectedEvent(event);
             }}
-            className="hover:text-dashboard-light transition-colors"
+            className="hover:text-green-500 transition-colors"
           >
             👁️
           </button>
-          <button className="hover:text-dashboard-light transition-colors">✏️</button>
+          <button className="hover:text-green-500 transition-colors">✏️</button>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -297,7 +297,7 @@ const Events = () => {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                         focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
                 />
               </div>
@@ -310,7 +310,7 @@ const Events = () => {
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                         focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="https://example.com/image.jpg"
                 />
                 {formData.imageUrl && (
@@ -337,7 +337,7 @@ const Events = () => {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary h-32"
+                         focus:outline-none focus:ring-2 focus:ring-green-500 h-32"
                   required
                 />
               </div>
@@ -349,7 +349,7 @@ const Events = () => {
                   value={formData.venue}
                   onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                         focus:outline-none focus:ring-2 focus:ring-green-500"
                   required
                 >
                   <option value="">Select a place</option>
@@ -369,7 +369,7 @@ const Events = () => {
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                         focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="Enter the full address"
                   required
                 />
@@ -384,7 +384,7 @@ const Events = () => {
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                           focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                   />
                 </div>
@@ -395,7 +395,7 @@ const Events = () => {
                     value={formData.hour}
                     onChange={(e) => setFormData({ ...formData, hour: e.target.value })}
                     className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                           focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                   />
                 </div>
@@ -410,7 +410,7 @@ const Events = () => {
                     value={formData.contact}
                     onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                     className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                           focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="https://twitter.com/youraccount"
                     required
                   />
@@ -461,7 +461,7 @@ const Events = () => {
                         price: e.target.checked ? '' : formData.price
                       });
                     }}
-                    className="w-4 h-4 text-dashboard-primary bg-dark-primary border-dark-accent rounded focus:ring-dashboard-primary"
+                    className="w-4 h-4 text-green-500 bg-dark-primary border-dark-accent rounded focus:ring-green-500"
                   />
                   <label htmlFor="isFree" className="ml-2 text-dark-text-secondary">
                     This is a free event
@@ -481,7 +481,7 @@ const Events = () => {
                         setFormData({ ...formData, price: e.target.value });
                       }}
                       className="w-full px-4 py-2 bg-dark-primary text-dark-text rounded-lg
-                             focus:outline-none focus:ring-2 focus:ring-dashboard-primary"
+                             focus:outline-none focus:ring-2 focus:ring-green-500"
                       required={!formData.isFree}
                     />
                   </div>
@@ -501,7 +501,7 @@ const Events = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-dashboard-primary hover:bg-dashboard-hover
+                  className="px-6 py-2 bg-green-500 hover:bg-green-600
                          text-white rounded-lg transition-colors duration-200"
                 >
                   Create Event
