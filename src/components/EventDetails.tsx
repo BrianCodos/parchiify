@@ -34,8 +34,8 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
       onClick={handleModalClick}
     >
       <div className="bg-dark-secondary rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        {/* Header with image */}
-        <div className="relative h-64 w-full">
+        {/* Header with image and overlay */}
+        <div className="relative h-96 w-full">
           {event.imageUrl ? (
             <img
               src={event.imageUrl}
@@ -47,6 +47,40 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
               <span className="text-6xl">🎉</span>
             </div>
           )}
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-t-lg" />
+          
+          {/* Title and price overlay */}
+          <div className="absolute bottom-0 left-0 right-0 p-8">
+            <div className="flex items-end justify-between">
+              <div className="space-y-2">
+                <h1 className="text-4xl font-bold text-white drop-shadow-lg">{event.title}</h1>
+                <div className="flex items-center gap-2">
+                  <span className="text-dashboard-primary text-xl">📅</span>
+                  <time className="text-xl text-white/90 font-medium tracking-wide backdrop-blur-sm px-4 py-1 rounded-full bg-white/10 border border-white/10">
+                    {new Date(event.date).toLocaleDateString(undefined, {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </time>
+                </div>
+              </div>
+              <div className={`
+                px-6 py-3 rounded-full font-bold text-2xl
+                ${event.isFree 
+                  ? 'bg-green-500 text-white shadow-lg shadow-green-500/50' 
+                  : 'bg-dashboard-primary text-white shadow-lg shadow-dashboard-primary/50'}
+                transform -translate-y-4 hover:scale-105 transition-all duration-200
+                border-2 border-white/20 backdrop-blur-sm
+              `}>
+                {event.isFree ? '✨ Free' : `$${event.price?.toFixed(2)}`}
+              </div>
+            </div>
+          </div>
+
+          {/* Close button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -58,31 +92,12 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-8">
-          <div className="flex justify-between items-start mb-6">
-            <h1 className="text-3xl font-bold text-dark-text">{event.title}</h1>
-            <div className="text-2xl font-bold text-dashboard-primary">
-              {event.isFree ? 'Free' : `$${event.price?.toFixed(2)}`}
-            </div>
-          </div>
-
           {/* Event details grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
               <h2 className="text-xl font-semibold text-dark-text mb-4">Details</h2>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-dark-text-secondary text-sm">Date</label>
-                  <p className="text-dark-text">
-                    {new Date(event.date).toLocaleDateString(undefined, {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
                 <div>
                   <label className="block text-dark-text-secondary text-sm">Venue</label>
                   <p className="text-dark-text">{event.venue}</p>
@@ -106,7 +121,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ event, onClose }) => {
           </div>
 
           {/* Description */}
-          <div className="mb-8">
+          <div>
             <h2 className="text-xl font-semibold text-dark-text mb-4">About this event</h2>
             <div
               className="prose prose-invert max-w-none text-dark-text-secondary"
