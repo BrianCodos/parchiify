@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import type { Event } from '../../types';
-import EventCard from '../events/EventCard';
+import CalendarEventCard from './CalendarEventCard';
 import './CalendarView.css';
 
 interface CalendarViewProps {
@@ -24,7 +24,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     onEditEvent,
     favoriteEvents
 }) => {
-    const [eventDetails, setEventDetails] = useState<Event[] | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedDayEvents, setSelectedDayEvents] = useState<Event[] | null>(null);
+
+    const handleDaySelect = (dateString: string, dayEvents: Event[]) => {
+        setSelectedDate(dateString);
+        setSelectedDayEvents(dayEvents.length > 0 ? dayEvents : null);
+    };
 
     const renderCalendarGrid = useCallback(() => {
         const year = calendarDate.getFullYear();
@@ -74,19 +80,17 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             const isToday = currentDateIter.getTime() === today.getTime();
             const dateStringForComparison = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const eventsOnThisDay = events.filter(event => event.date === dateStringForComparison);
+            const isSelectedDate = selectedDate === dateStringForComparison;
 
-            let dayClasses = `calendar-day${isToday ? ' today' : ''}`;
-            if (eventsOnThisDay.length > 0) dayClasses += " cursor-pointer";
+            let dayClasses = `calendar-day${isToday ? ' today' : ''}${isSelectedDate ? ' selected' : ''}`;
 
             dayCells.push(
                 <div
                     key={`day-${day}`}
                     className={dayClasses}
-                    onClick={() => eventsOnThisDay.length > 0 ? setEventDetails(eventsOnThisDay) : setEventDetails(null)}
+                    onClick={() => handleDaySelect(dateStringForComparison, eventsOnThisDay)}
                 >
-                    <span
-                        className={`calendar-day-number${isToday ? ' today' : ''}`}
-                    >
+                    <span className={`calendar-day-number${isToday ? ' today' : ''}`}>
                         {day}
                     </span>
                     <div className="calendar-events">
@@ -97,10 +101,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({
                                 className="calendar-event"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setEventDetails(eventsOnThisDay);
+                                    handleDaySelect(dateStringForComparison, eventsOnThisDay);
                                 }}
                             >
-                                {event.place}
+                                {favoriteEvents.includes(event.id) && (
+                                    <i className="fas fa-star event-favorite-star"></i>
+                                )}
+                                <span className="event-name">{event.place}</span>
                             </div>
                         ))}
                         {eventsOnThisDay.length > 3 && (
@@ -130,12 +137,22 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         }
 
         return dayCells;
-    }, [calendarDate, events]);
+    }, [calendarDate, events, favoriteEvents, selectedDate]);
 
     const monthNames = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
+
+    // Format selected date for display
+    const formattedSelectedDate = selectedDate 
+        ? new Date(selectedDate + "T00:00:00").toLocaleDateString('es-ES', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })
+        : null;
 
     return (
         <section className="calendar-container">
@@ -161,32 +178,50 @@ const CalendarView: React.FC<CalendarViewProps> = ({
                     <i className="fas fa-chevron-right"></i>
                 </button>
             </div>
-            <div className="calendar-content">
-                <div className="calendar-grid">
-                    {renderCalendarGrid()}
-                </div>
-                {eventDetails && eventDetails.length > 0 && (
-                    <div className="calendar-event-cards">
-                        <h3 className="calendar-event-cards-header">
-                            Eventos del {new Date(eventDetails[0].date + "T00:00:00").toLocaleDateString('es-ES', {
-                                day: 'numeric',
-                                month: 'long'
-                            })}:
-                        </h3>
-                        <div className="calendar-event-cards-grid">
-                            {eventDetails.map(event => (
-                                <EventCard
-                                    key={event.id}
-                                    event={event}
-                                    onToggleFavorite={onToggleFavorite}
-                                    onDeleteEvent={onDeleteEvent}
-                                    onEditEvent={onEditEvent}
-                                    isFavorited={favoriteEvents.includes(event.id)}
-                                />
-                            ))}
-                        </div>
+            
+            <div className="calendar-layout">
+                {/* Main Calendar (2 columns) */}
+                <div className="calendar-main-section">
+                    <div className="calendar-grid">
+                        {renderCalendarGrid()}
                     </div>
-                )}
+                </div>
+                
+                {/* Events Sidebar (1 column) */}
+                <div className="calendar-sidebar">
+                    {selectedDate ? (
+                        <div className="calendar-day-events">
+                            <h3 className="calendar-day-events-header">
+                                Eventos del {formattedSelectedDate}:
+                            </h3>
+                            
+                            {selectedDayEvents && selectedDayEvents.length > 0 ? (
+                                <div className="calendar-day-events-list">
+                                    {selectedDayEvents.map(event => (
+                                        <CalendarEventCard
+                                            key={event.id}
+                                            event={event}
+                                            onToggleFavorite={onToggleFavorite}
+                                            isFavorited={favoriteEvents.includes(event.id)}
+                                            onSelectEvent={onEditEvent}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="calendar-day-events-empty">
+                                    <p>No hay eventos para este día.</p>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="calendar-day-events-placeholder">
+                            <div className="calendar-placeholder-icon">
+                                <i className="fas fa-calendar-day"></i>
+                            </div>
+                            <p className="calendar-placeholder-text">Selecciona un día para ver sus eventos.</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </section>
     );

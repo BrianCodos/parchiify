@@ -1,41 +1,173 @@
-/* Event List Component */
-.event-list {
+/* Event List Container */
+.event-list-container {
+  background-color: #0f172a;
+  border-radius: 16px;
+  border: 1px solid #1e293b;
   padding: 1.5rem;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 640px) {
-  .event-list {
+  .event-list-container {
     padding: 2rem;
   }
 }
 
+/* Header styles */
 .event-list-header {
   margin-bottom: 2rem;
   text-align: center;
 }
 
 .event-list-title {
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   font-weight: 700;
-}
-
-@media (min-width: 640px) {
-  .event-list-title {
-    font-size: 2.25rem;
-  }
+  background: linear-gradient(120deg, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
 }
 
 .event-list-subtitle {
-  color: #9ca3af;
-  margin-top: 0.5rem;
+  color: #94a3b8;
   font-size: 1.1rem;
+}
+
+/* Search and Filters */
+.event-search-filters {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Search container */
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.search-input {
+  width: 100%;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px 42px;
+  color: #e2e8f0;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.search-clear-btn:hover {
+  color: #94a3b8;
+  background-color: #334155;
+}
+
+/* Mood filter container */
+.mood-filter-container {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.mood-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mood-filter-header h3 {
+  color: #e2e8f0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.clear-filters-btn {
+  background: none;
+  border: none;
+  color: #818cf8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: all 0.2s;
+}
+
+.clear-filters-btn:hover {
+  text-decoration: underline;
+  color: #a5b4fc;
+}
+
+.mood-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mood-filter-btn {
+  background-color: #334155;
+  border: none;
+  color: #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mood-filter-btn:hover {
+  background-color: #475569;
+}
+
+.mood-filter-btn.active {
+  background-color: #818cf8;
+  color: #1e293b;
+  font-weight: 500;
 }
 
 /* Event List Content Wrapper */
@@ -68,11 +200,14 @@
   }
 }
 
+/* Empty state */
 .event-empty-state {
   text-align: center;
   padding: 3rem 1.5rem;
   width: 100%;
   margin: 1rem 0;
+  border: 2px dashed #334155;
+  border-radius: 12px;
 }
 
 .event-empty-icon {
@@ -83,7 +218,7 @@
   height: 4rem;
   border-radius: 9999px;
   background-color: transparent;
-  border: 2px dashed #4f46e5;
+  border: 2px dashed #818cf8;
   margin-bottom: 1.5rem;
 }
 
@@ -93,13 +228,29 @@
 }
 
 .event-empty-text {
-  color: #e5e7eb;
+  color: #e2e8f0;
   font-size: 1.25rem;
   font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
 .event-empty-help {
-  color: #9ca3af;
+  color: #94a3b8;
   margin-top: 0.75rem;
   font-size: 1rem;
+}
+
+.reset-search-btn {
+  background: none;
+  border: none;
+  color: #818cf8;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  transition: color 0.2s;
+}
+
+.reset-search-btn:hover {
+  color: #a5b4fc;
+  text-decoration: underline;
 } 

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Event } from '../../types';
 import EventCard from './EventCard';
+import './SavedEventsView.css';
 
 interface SavedEventsViewProps {
     events: Event[];
@@ -20,12 +21,13 @@ const SavedEventsView: React.FC<SavedEventsViewProps> = ({
     const sortedFavoriteEvents = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
-        <section className="rounded-lg p-6 sm:p-8 border border-gray-700">
-            <header className="mb-8 text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Mis Eventos Guardados</h1>
+        <section className="saved-events-container">
+            <header className="saved-events-header">
+                <h1 className="saved-events-title">Mis Eventos Guardados</h1>
+                <p className="saved-events-subtitle">Revisa tus eventos favoritos</p>
             </header>
             {sortedFavoriteEvents.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="saved-events-grid">
                     {sortedFavoriteEvents.map(event => (
                         <EventCard
                             key={event.id}
@@ -38,10 +40,13 @@ const SavedEventsView: React.FC<SavedEventsViewProps> = ({
                     ))}
                 </div>
             ) : (
-                <div className="text-center text-gray-400 py-12 border border-gray-700 border-dashed rounded-lg">
-                    <i className="fas fa-star fa-2x mb-3 text-gray-500"></i>
-                    <h2 className="text-xl font-semibold text-gray-300 mb-1">No hay eventos guardados</h2>
-                    <p className="text-gray-500">Cuando guardes un evento, aparecerá aquí.</p>
+                <div className="saved-events-empty">
+                    <div className="empty-star-icon">
+                        <i className="fas fa-star"></i>
+                    </div>
+                    <h2 className="empty-title">No hay eventos guardados</h2>
+                    <p className="empty-message">Cuando guardes un evento como favorito, aparecerá aquí.</p>
+                    <p className="empty-tip">Utiliza el botón <i className="fas fa-star example-star"></i> en las tarjetas de eventos para añadirlas a favoritos.</p>
                 </div>
             )}
         </section>
