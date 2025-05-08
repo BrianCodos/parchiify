@@ -20,9 +20,9 @@ const SavedEventsView: React.FC<SavedEventsViewProps> = ({
     const sortedFavoriteEvents = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
-        <section className="bg-gray-800 shadow-xl rounded-lg p-6 sm:p-8">
+        <section className="rounded-lg p-6 sm:p-8 border border-gray-700">
             <header className="mb-8 text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-indigo-400">Mis Eventos Guardados</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Mis Eventos Guardados</h1>
             </header>
             {sortedFavoriteEvents.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -38,7 +38,7 @@ const SavedEventsView: React.FC<SavedEventsViewProps> = ({
                     ))}
                 </div>
             ) : (
-                <div className="text-center text-gray-400 py-12">
+                <div className="text-center text-gray-400 py-12 border border-gray-700 border-dashed rounded-lg">
                     <i className="fas fa-star fa-2x mb-3 text-gray-500"></i>
                     <h2 className="text-xl font-semibold text-gray-300 mb-1">No hay eventos guardados</h2>
                     <p className="text-gray-500">Cuando guardes un evento, aparecerá aquí.</p>

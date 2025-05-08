@@ -1,79 +1,104 @@
 import React, { useState } from 'react';
+import type { MoodHandlers } from '../../types';
 
-interface DashboardProps {
-    moods: string[];
-    onAddMood: (moodName: string) => void;
-    onDeleteMood: (moodName: string) => void;
-}
+interface DashboardProps extends MoodHandlers {}
 
-const Dashboard: React.FC<DashboardProps> = ({
-    moods,
-    onAddMood,
-    onDeleteMood
-}) => {
-    const [newMoodName, setNewMoodName] = useState('');
+const Dashboard: React.FC<DashboardProps> = ({ onAddMood, onDeleteMood }) => {
+    const [newMood, setNewMood] = useState<string>('');
+    const [moods, setMoods] = useState<string[]>(() => {
+        const savedMoods = localStorage.getItem('moods');
+        return savedMoods ? JSON.parse(savedMoods) : [
+            'Feliz', 'Triste', 'Enojado', 'Sorprendido', 'Emocionado'
+        ];
+    });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (newMoodName.trim()) {
-            onAddMood(newMoodName.trim());
-            setNewMoodName('');
+    const handleAddMood = () => {
+        if (newMood.trim() && !moods.includes(newMood.trim())) {
+            const updatedMoods = [...moods, newMood.trim()];
+            setMoods(updatedMoods);
+            onAddMood(newMood.trim());
+            setNewMood('');
         }
     };
 
-    const baseInputClass = "mt-1 block w-full rounded-md bg-gray-700 text-white shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-colors duration-150 ease-in-out p-3";
-    const validInputClass = "border-gray-600";
+    const handleDeleteMood = (mood: string) => {
+        const updatedMoods = moods.filter(m => m !== mood);
+        setMoods(updatedMoods);
+        onDeleteMood(mood);
+    };
 
-    const iconButtonBaseClass = "p-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-gray-700 hover:bg-gray-600 transition-all duration-150 ease-in-out";
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleAddMood();
+        }
+    };
 
     return (
-        <section className="bg-gray-800 shadow-xl rounded-lg p-6 sm:p-8 max-w-2xl mx-auto">
+        <section className="rounded-lg p-6 sm:p-8 border border-gray-700">
             <header className="mb-8 text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-indigo-400">Dashboard</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Dashboard</h1>
+                <p className="text-gray-400 mt-2">Gestiona la configuración de tu aplicación</p>
             </header>
-            <div className="mb-10">
-                <h2 className="text-2xl font-semibold text-gray-300 mb-4">Administrar Moods</h2>
-                <form onSubmit={handleSubmit} className="mb-6 flex gap-2">
-                    <input
+
+            <div className="mb-8">
+                <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
+                    <i className="fas fa-sliders-h mr-3 text-indigo-400"></i>
+                    Gestionar Moods
+                </h2>
+                <p className="text-gray-400 mb-4">
+                    Añade o elimina moods para clasificar tus eventos.
+                </p>
+
+                <div className="flex gap-2 mb-6">
+                    <input 
                         type="text"
-                        value={newMoodName}
-                        onChange={e => setNewMoodName(e.target.value)}
-                        placeholder="Nombre del Mood"
-                        required
-                        className="flex-grow p-3 bg-gray-700 border border-gray-600 rounded-md"
+                        placeholder="Nuevo mood..."
+                        value={newMood}
+                        onChange={(e) => setNewMood(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="flex-grow p-3 rounded-lg bg-gray-800 text-white border-0 shadow-md focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
                     />
-                    <button
-                        type="submit"
-                        className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-4 rounded-md"
+                    <button 
+                        onClick={handleAddMood}
+                        className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        Añadir Mood
+                        <i className="fas fa-plus mr-2"></i>
+                        Añadir
                     </button>
-                </form>
-                <h3 className="text-xl font-semibold text-gray-300 mb-3">Moods Existentes:</h3>
-                {moods.length > 0 ? (
-                    <div className="space-y-2">
-                        {moods.map((mood, index) => (
-                            <div
-                                key={index}
-                                className="flex justify-between items-center p-2 bg-gray-700 rounded-md"
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {moods.map((mood) => (
+                        <div 
+                            key={mood}
+                            className="flex justify-between items-center p-3 rounded-lg border border-gray-700 text-white"
+                        >
+                            <span>{mood}</span>
+                            <button
+                                onClick={() => handleDeleteMood(mood)}
+                                className="text-red-400 hover:text-red-300 p-1 rounded-full hover:bg-red-900/30 transition-all duration-200"
+                                aria-label="Eliminar mood"
+                                title="Eliminar mood"
                             >
-                                <span className="text-gray-300">{mood}</span>
-                                <button
-                                    onClick={() => onDeleteMood(mood)}
-                                    className="text-red-500 hover:text-red-400 text-sm"
-                                >
-                                    <i className="fas fa-trash-alt"></i> Eliminar
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center text-gray-500 py-8 border border-dashed border-gray-700 rounded-lg">
-                        <i className="fas fa-smile-beam fa-2x mb-3 text-gray-500"></i>
-                        <h2 className="text-lg font-semibold text-gray-400 mb-1">No hay moods definidos</h2>
-                        <p className="text-sm">Añade moods para categorizar tus eventos.</p>
-                    </div>
-                )}
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
+                    <i className="fas fa-chart-line mr-3 text-indigo-400"></i>
+                    Estadísticas
+                </h2>
+                <p className="text-gray-400 mb-4">
+                    Aquí encontrarás estadísticas sobre tus eventos.
+                </p>
+                <div className="text-center py-12 text-gray-400 border border-gray-700 border-dashed rounded-lg">
+                    <i className="fas fa-chart-bar fa-3x mb-4 text-gray-500"></i>
+                    <p>Las estadísticas estarán disponibles pronto.</p>
+                </div>
             </div>
         </section>
     );

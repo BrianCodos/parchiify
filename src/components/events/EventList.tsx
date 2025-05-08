@@ -21,10 +21,10 @@ const EventList: React.FC<EventListProps> = ({
     const sortedEvents = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
-        <section className="event-list">
+        <section className="event-list border border-gray-700 rounded-lg">
             <header className="event-list-header">
-                <h1 className="event-list-title text-gradient">
-                    Eventos
+                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                    Describir eventos
                 </h1>
                 <p className="event-list-subtitle">Gestiona tus eventos de manera eficiente</p>
             </header>
@@ -44,7 +44,7 @@ const EventList: React.FC<EventListProps> = ({
                         ))}
                     </div>
                 ) : (
-                    <div className="event-empty-state">
+                    <div className="event-empty-state border border-gray-700 border-dashed rounded-lg">
                         <div className="event-empty-icon">
                             <i className="fas fa-calendar-day"></i>
                         </div>

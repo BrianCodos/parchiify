@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentView, currentView, isOpen, 
                 <div className="sidebar-body styled-scrollbar">
                     <nav className="sidebar-nav">
                         {[
-                            { view: 'list-cards', label: 'Vista de Tarjetas', icon: 'fas fa-th-large' },
+                            { view: 'list-cards', label: 'Describir eventos', icon: 'fas fa-clipboard-list' },
                             { view: 'list-table', label: 'Vista de Tabla', icon: 'fas fa-table' },
                             { view: 'calendar', label: 'Calendario', icon: 'fas fa-calendar-alt' },
                             { view: 'saved', label: 'Favoritos', icon: 'fas fa-star' },

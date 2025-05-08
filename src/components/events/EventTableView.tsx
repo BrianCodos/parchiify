@@ -14,63 +14,63 @@ const EventTableView: React.FC<EventTableViewProps> = ({
 }) => {
     const sortedEvents = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+    // Base class for table header cells
+    const tableHeaderClass = "text-left py-3 px-4 text-gray-400 text-sm font-medium border-b border-gray-700 first:rounded-tl-lg last:rounded-tr-lg";
+    
+    // Base class for table cells
+    const tableCellClass = "py-4 px-4 text-gray-300";
+    
     // Base class for action icon buttons in table, similar to EventCard
-    const iconButtonBaseClass = "p-1.5 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-gray-800 hover:bg-gray-600 transition-all duration-150 ease-in-out";
+    const iconButtonBaseClass = "p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-gray-800 hover:bg-gray-700 transition-all duration-150 ease-in-out";
 
     return (
-        <section className="bg-gray-800 shadow-xl rounded-lg">
+        <section className="rounded-lg">
             <header className="pt-6 sm:pt-8 px-6 sm:px-8 mb-6 text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-indigo-400">Tabla de Eventos</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Tabla de Eventos</h1>
             </header>
             {sortedEvents.length > 0 ? (
-                <div className="overflow-x-auto p-1 sm:p-2"> {/* Added slight padding around the table container */}
-                    <table className="min-w-full divide-y divide-gray-700">
-                        <thead className="bg-gray-700 bg-opacity-50"> {/* Darker, slightly transparent header */}
+                <div className="px-6 sm:px-8 pb-6 sm:pb-8 overflow-x-auto styled-scrollbar">
+                    <table className="w-full border-collapse shadow-md rounded-lg overflow-hidden">
+                        <thead className="bg-gray-800 rounded-t-lg">
                             <tr>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Lugar</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Ciudad</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Fecha</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Mood</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Acciones</th>
+                                <th className={tableHeaderClass}>Lugar</th>
+                                <th className={tableHeaderClass}>Ciudad</th>
+                                <th className={tableHeaderClass}>Fecha</th>
+                                <th className={`${tableHeaderClass} text-center`}>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-gray-800 divide-y divide-gray-700">
-                            {sortedEvents.map(event => (
-                                <tr key={event.id} className="hover:bg-gray-700 hover:bg-opacity-75 transition-colors duration-150 ease-in-out group">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 group-hover:text-white">{event.place}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 group-hover:text-gray-100">{event.city}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 group-hover:text-gray-100">
+                        <tbody>
+                            {sortedEvents.map((event, index) => (
+                                <tr 
+                                    key={event.id} 
+                                    className={`border-b border-gray-700 hover:bg-gray-700 transition-colors duration-150 ${index === sortedEvents.length - 1 ? 'last:border-b-0' : ''}`}
+                                >
+                                    <td className={`${tableCellClass} font-medium text-white`}>{event.place}</td>
+                                    <td className={tableCellClass}>{event.city}</td>
+                                    <td className={tableCellClass}>
                                         {new Date(event.date).toLocaleDateString('es-ES', {
-                                            weekday: 'short', /* Shorten weekday for table view */
                                             year: 'numeric',
-                                            month: 'short', /* Shorten month */
+                                            month: 'long',
                                             day: 'numeric'
                                         })}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 group-hover:text-gray-100">
-                                        {event.mood ? (
-                                            <span className="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-700 group-hover:bg-gray-600 text-gray-300 group-hover:text-gray-100">
-                                                {event.mood}
-                                            </span>
-                                        ) : (
-                                            <span className="text-gray-500">-</span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <div className="flex items-center space-x-2.5">
+                                    <td className={`${tableCellClass} text-center`}>
+                                        <div className="flex justify-center space-x-2">
                                             <button
                                                 onClick={() => onEditEvent(event)}
-                                                className={`${iconButtonBaseClass} text-blue-400 hover:text-blue-300 focus:ring-blue-500`}
+                                                className={`${iconButtonBaseClass} text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 focus:ring-blue-500`}
                                                 aria-label="Editar evento"
+                                                title="Editar evento"
                                             >
-                                                <i className="fas fa-edit text-base"></i>
+                                                <i className="fas fa-edit"></i>
                                             </button>
                                             <button
                                                 onClick={() => onDeleteEvent(event.id)}
-                                                className={`${iconButtonBaseClass} text-red-500 hover:text-red-400 focus:ring-red-600`}
+                                                className={`${iconButtonBaseClass} text-red-500 hover:text-red-400 hover:bg-red-900/30 focus:ring-red-600`}
                                                 aria-label="Eliminar evento"
+                                                title="Eliminar evento"
                                             >
-                                                <i className="fas fa-trash-alt text-base"></i>
+                                                <i className="fas fa-trash-alt"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -82,7 +82,8 @@ const EventTableView: React.FC<EventTableViewProps> = ({
             ) : (
                 <div className="text-center text-gray-400 py-12">
                     <i className="fas fa-table fa-2x mb-3 text-gray-500"></i>
-                    <p className="text-lg">No hay eventos registrados para mostrar en la tabla.</p>
+                    <h2 className="text-xl font-semibold text-gray-300 mb-1">No hay eventos registrados</h2>
+                    <p className="text-gray-500">Crea tu primer evento para verlo en la tabla.</p>
                 </div>
             )}
         </section>

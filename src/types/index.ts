@@ -7,10 +7,15 @@ export interface Event {
     isDraft?: boolean;
     mood?: string;
     notes?: string;
+    imageUrl?: string;
 }
 
 export interface EventFormData extends Omit<Event, 'id'> {
     id?: string;
+    imageUrl?: string;
+    entryType?: string;
+    coverFee?: string;
+    selectedMoods?: string[];
 }
 
 export type ViewType = 'list-cards' | 'list-table' | 'calendar' | 'saved' | 'dashboard' | 'drafts' | 'form';

@@ -35,6 +35,7 @@
 .event-list-subtitle {
   color: #9ca3af;
   margin-top: 0.5rem;
+  font-size: 1.1rem;
 }
 
 /* Event List Content Wrapper */
@@ -69,8 +70,9 @@
 
 .event-empty-state {
   text-align: center;
-  padding: 2.5rem 0;
+  padding: 3rem 1.5rem;
   width: 100%;
+  margin: 1rem 0;
 }
 
 .event-empty-icon {
@@ -80,8 +82,9 @@
   width: 4rem;
   height: 4rem;
   border-radius: 9999px;
-  background-color: rgba(99, 102, 241, 0.2);
-  margin-bottom: 1rem;
+  background-color: transparent;
+  border: 2px dashed #4f46e5;
+  margin-bottom: 1.5rem;
 }
 
 .event-empty-icon i {
@@ -90,11 +93,13 @@
 }
 
 .event-empty-text {
-  color: #9ca3af;
-  font-size: 1.125rem;
+  color: #e5e7eb;
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 .event-empty-help {
-  color: #6b7280;
-  margin-top: 0.5rem;
+  color: #9ca3af;
+  margin-top: 0.75rem;
+  font-size: 1rem;
 } 
