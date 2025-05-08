@@ -10,4 +10,10 @@
 
 # Disable Go installation 
 [context.production.environment]
-  GO_VERSION = "" 
+  GO_VERSION = ""
+
+# Redirect all routes to index.html for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
