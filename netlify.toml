@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+  
+[context.production]
+  environment = { NODE_VERSION = "18" }
+
+# Disable Go installation 
+[context.production.environment]
+  GO_VERSION = "" 
