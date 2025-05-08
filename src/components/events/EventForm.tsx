@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Event, EventFormData } from '../../types';
+import './EventForm.css';
 
 interface EventFormProps {
     onAddEvent: (event: Event) => void;
@@ -163,40 +164,37 @@ const EventForm: React.FC<EventFormProps> = ({
             }
         });
     };
-
-    const inputClass = "w-full bg-slate-800 border border-slate-600 text-slate-200 placeholder-slate-400 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500";
-    const labelClass = "text-sm text-gray-400 mb-1 block";
     
     return (
-        <div className="bg-gray-900 text-white w-full max-w-5xl mx-auto p-6 rounded-lg shadow-md border border-gray-800">
-            <h2 className="text-2xl font-bold text-center text-slate-100 mb-8">
+        <div className="event-form-container">
+            <h2 className="event-form-title">
                 {initialData ? 'Editar Evento' : 'Añadir Nuevo Evento'}
             </h2>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <div className="mb-4">
-                            <label htmlFor="place" className={labelClass}>Lugar/Nombre:</label>
+            <form onSubmit={handleSubmit}>
+                <div className="event-form-grid">
+                    <div className="event-form-column">
+                        <div className="form-group">
+                            <label htmlFor="place">Lugar/Nombre:</label>
                             <input
                                 type="text"
                                 id="place"
                                 name="place"
                                 value={formData.place}
                                 onChange={handleChange}
-                                className={inputClass}
+                                className={errors.place ? "form-input error" : "form-input"}
                             />
-                            {errors.place && <p className="text-red-500 mt-1 text-sm">{errors.place}</p>}
+                            {errors.place && <p className="error-message">{errors.place}</p>}
                         </div>
                         
-                        <div className="mb-4">
-                            <label htmlFor="city" className={labelClass}>Ciudad:</label>
+                        <div className="form-group">
+                            <label htmlFor="city">Ciudad:</label>
                             <select
                                 id="city"
                                 name="city"
                                 value={formData.city}
                                 onChange={handleChange}
-                                className={inputClass}
+                                className={errors.city ? "form-select error" : "form-select"}
                             >
                                 <option value="">Seleccionar ciudad</option>
                                 <option value="Cali">Cali</option>
@@ -205,53 +203,53 @@ const EventForm: React.FC<EventFormProps> = ({
                                 <option value="Barranquilla">Barranquilla</option>
                                 <option value="Cartagena">Cartagena</option>
                             </select>
-                            {errors.city && <p className="text-red-500 mt-1 text-sm">{errors.city}</p>}
+                            {errors.city && <p className="error-message">{errors.city}</p>}
                         </div>
                         
-                        <div className="mb-4">
-                            <label htmlFor="notes" className={labelClass}>Descripción (Opcional):</label>
+                        <div className="form-group">
+                            <label htmlFor="notes">Descripción (Opcional):</label>
                             <textarea
                                 id="notes"
                                 name="notes"
                                 value={formData.notes || ''}
                                 onChange={handleChange}
                                 rows={5}
-                                className={inputClass}
+                                className="form-textarea"
                             />
                         </div>
                     </div>
                     
-                    <div>
-                        <div className="mb-4">
-                            <label htmlFor="date" className={labelClass}>Fecha:</label>
+                    <div className="event-form-column">
+                        <div className="form-group">
+                            <label htmlFor="date">Fecha:</label>
                             <input
                                 type="date"
                                 id="date"
                                 name="date"
                                 value={formData.date}
                                 onChange={handleChange}
-                                className={inputClass}
+                                className={errors.date ? "form-input error" : "form-input"}
                                 placeholder="mm/dd/yyyy"
                             />
-                            {errors.date && <p className="text-red-500 mt-1 text-sm">{errors.date}</p>}
+                            {errors.date && <p className="error-message">{errors.date}</p>}
                         </div>
                         
-                        <div className="mb-4">
-                            <label htmlFor="link" className={labelClass}>Enlace (Opcional):</label>
+                        <div className="form-group">
+                            <label htmlFor="link">Enlace (Opcional):</label>
                             <input
                                 type="text"
                                 id="link"
                                 name="link"
                                 value={formData.link || ''}
                                 onChange={handleChange}
-                                className={inputClass}
+                                className="form-input"
                                 placeholder="https://..."
                             />
                         </div>
                         
-                        <div className="mb-4">
-                            <label className={labelClass}>Imagen:</label>
-                            <div className="relative">
+                        <div className="form-group">
+                            <label>Imagen:</label>
+                            <div className="image-upload">
                                 <input
                                     type="file"
                                     ref={fileInputRef}
@@ -262,38 +260,38 @@ const EventForm: React.FC<EventFormProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="bg-slate-700 text-slate-200 hover:bg-slate-600 py-2 px-4 rounded-md mr-2"
+                                    className="file-upload-btn"
                                 >
                                     Choose File
                                 </button>
-                                <span className="text-slate-400">
+                                <span className="file-name">
                                     {imagePreview ? 'Imagen seleccionada' : 'No file chosen'}
                                 </span>
                             </div>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="mb-4">
-                                <label htmlFor="entryType" className={labelClass}>Tipo Entrada:</label>
+                        <div className="entry-fee-grid">
+                            <div className="form-group">
+                                <label htmlFor="entryType">Tipo Entrada:</label>
                                 <input
                                     type="text"
                                     id="entryType"
                                     name="entryType"
-                                    value={formData.entryType || 'Gratuito'}
+                                    value={formData.entryType || 'Gratuito (Desactivado)'}
                                     disabled
-                                    className={`${inputClass} opacity-70`}
+                                    className="form-input disabled"
                                 />
                             </div>
                             
-                            <div className="mb-4">
-                                <label htmlFor="coverFee" className={labelClass}>Cover (COP):</label>
+                            <div className="form-group">
+                                <label htmlFor="coverFee">Cover (COP):</label>
                                 <input
                                     type="text"
                                     id="coverFee"
                                     name="coverFee"
                                     value={formData.coverFee || ''}
                                     onChange={handleChange}
-                                    className={inputClass}
+                                    className="form-input"
                                     placeholder="0"
                                 />
                             </div>
@@ -301,20 +299,16 @@ const EventForm: React.FC<EventFormProps> = ({
                     </div>
                 </div>
                 
-                <div className="mt-6 mb-6">
-                    <label className={labelClass}>Moods (Máx. 5):</label>
-                    <div className="bg-slate-800 border border-slate-600 rounded-md p-3">
-                        <div className="flex flex-wrap gap-2">
+                <div className="moods-container">
+                    <label>Moods (Máx. 5):</label>
+                    <div className="moods-selector">
+                        <div className="moods-buttons">
                             {allMoods.map(mood => (
                                 <button
                                     key={mood}
                                     type="button"
                                     onClick={() => toggleMood(mood)}
-                                    className={`px-3 py-1 rounded-md text-sm ${
-                                        formData.selectedMoods?.includes(mood)
-                                            ? 'bg-slate-300 text-slate-800 hover:bg-slate-200'
-                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                                    }`}
+                                    className={formData.selectedMoods?.includes(mood) ? "mood-button selected" : "mood-button"}
                                 >
                                     {mood}
                                 </button>
@@ -323,29 +317,29 @@ const EventForm: React.FC<EventFormProps> = ({
                     </div>
                 </div>
                 
-                <div className="mb-6">
-                    <label className={labelClass}>Notificaciones (Simulado):</label>
-                    <p className="text-sm text-gray-400">Selecciona fecha para ver opciones.</p>
+                <div className="notifications-container">
+                    <label>Notificaciones (Simulado):</label>
+                    <p className="notifications-helper">Selecciona fecha para ver opciones.</p>
                 </div>
                 
-                <div className="flex justify-end gap-4 mt-10">
+                <div className="form-actions">
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-5 py-2 bg-slate-700 text-slate-300 rounded-md hover:bg-slate-600 transition-colors duration-200"
+                        className="btn-cancel"
                     >
                         Cancelar
                     </button>
                     <button
                         type="button"
                         onClick={handleSaveDraft}
-                        className="px-5 py-2 bg-slate-600 text-slate-200 rounded-md hover:bg-slate-500 transition-colors duration-200"
+                        className="btn-save-draft"
                     >
                         Guardar Borrador
                     </button>
                     <button
                         type="submit"
-                        className="px-5 py-2 bg-slate-500 text-slate-100 rounded-md hover:bg-slate-400 transition-colors duration-200"
+                        className="btn-save"
                     >
                         Guardar Evento
                     </button>
