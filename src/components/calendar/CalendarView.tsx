@@ -7,9 +7,7 @@ interface CalendarViewProps {
     events: Event[];
     calendarDate: Date;
     setCalendarDate: (date: Date) => void;
-    onEventSelect: (event: Event) => void;
     onToggleFavorite: (eventId: string) => void;
-    onDeleteEvent: (eventId: string) => void;
     onEditEvent: (event: Event) => void;
     favoriteEvents: string[];
 }
@@ -18,9 +16,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     events,
     calendarDate,
     setCalendarDate,
-    onEventSelect,
     onToggleFavorite,
-    onDeleteEvent,
     onEditEvent,
     favoriteEvents
 }) => {

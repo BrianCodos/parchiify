@@ -137,9 +137,7 @@ const App: React.FC = () => {
                         events={events}
                         calendarDate={calendarDate}
                         setCalendarDate={setCalendarDate}
-                        onEventSelect={editDraftOrEventHandler}
                         onToggleFavorite={toggleFavoriteHandler}
-                        onDeleteEvent={deleteEventHandler}
                         onEditEvent={editDraftOrEventHandler}
                         favoriteEvents={favoriteEvents}
                     />
