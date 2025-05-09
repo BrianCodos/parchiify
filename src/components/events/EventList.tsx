@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 import React, { useState, useEffect } from 'react';
 import type { Event } from '../../types';
-import EventCard from './EventCard';
+import EventGrid from './EventGrid';
 import './EventList.scss';
 
 interface EventListProps {
@@ -169,28 +169,13 @@ return (
         
         {/* Sección de resultados */}
         <div className="event-list-content">
-            {filteredEvents.length > 0 ? (
-                <>
-                    {/* Cuadrícula de eventos */}
-                    <div className="event-grid">
-                        {filteredEvents.map((event, index) => (
-                            <EventCard
-                                key={event.id}
-                                event={event}
-                                onToggleFavorite={onToggleFavorite}
-                                onDeleteEvent={onDeleteEvent}
-                                onEditEvent={onEditEvent}
-                                isFavorited={favoriteEvents.includes(event.id)}
-                                allEvents={filteredEvents}
-                                currentIndex={index}
-                                favoritedEventIds={favoriteEvents}
-                            />
-                        ))}
-                    </div>
-                </>
-            ) : (
-                <>
-                    {/* Estado vacío de eventos */}
+            <EventGrid 
+                events={filteredEvents}
+                onToggleFavorite={onToggleFavorite}
+                onDeleteEvent={onDeleteEvent}
+                onEditEvent={onEditEvent}
+                favoriteEvents={favoriteEvents}
+                emptyStateComponent={
                     <div className="event-empty-state">
                         <div className="event-empty-icon">
                             <i className="fas fa-calendar-day"></i>
@@ -212,8 +197,8 @@ return (
                             </>
                         )}
                     </div>
-                </>
-            )}
+                }
+            />
         </div>
     </section>
 );

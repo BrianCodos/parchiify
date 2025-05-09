@@ -1,0 +1,19 @@
+@import '../../styles/abstracts/variables';
+@import '../../styles/abstracts/mixins';
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    width: 100%;
+    
+    @media (max-width: $screen-md) {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: $spacing-md;
+    }
+    
+    @media (max-width: $screen-sm) {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: $spacing-sm;
+    }
+} 

@@ -1,15 +1,15 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import type { Event, ViewType } from './types';
-import Navbar from './components/layout/Navbar';
-import Sidebar from './components/layout/Sidebar';
-import EventForm from './components/events/EventForm';
-import EventList from './components/events/EventList';
-import EventTableView from './components/events/EventTableView';
-import SavedEventsView from './components/events/SavedEventsView';
-import DraftsView from './components/events/DraftsView';
-import Dashboard from './components/dashboard/Dashboard';
-import CalendarView from './components/calendar/CalendarView';
+import { Navbar, Sidebar } from './components';
+import { 
+    EventsPage, 
+    DashboardPage, 
+    CalendarPage, 
+    SavedEventsPage, 
+    DraftsPage, 
+    EventFormPage 
+} from './pages';
 import { DEFAULT_MOODS } from './constants';
 import './styles/App.scss';
 
@@ -121,24 +121,26 @@ const App: React.FC = () => {
         setCurrentView('form');
     };
 
+    const handleCancelForm = () => {
+        setCurrentView('list-cards');
+        setEditingEvent(null);
+    };
+
     const renderCurrentView = () => {
         switch (currentView) {
             case 'form':
                 return (
-                    <EventForm
+                    <EventFormPage
                         onAddEvent={addEventHandler}
                         onSaveDraft={saveDraftHandler}
                         allMoods={moods}
-                        onCancel={() => {
-                            setCurrentView('list-cards');
-                            setEditingEvent(null);
-                        }}
+                        onCancel={handleCancelForm}
                         initialData={editingEvent || undefined}
                     />
                 );
             case 'calendar':
                 return (
-                    <CalendarView
+                    <CalendarPage
                         events={events}
                         calendarDate={calendarDate}
                         setCalendarDate={setCalendarDate}
@@ -149,8 +151,8 @@ const App: React.FC = () => {
                 );
             case 'saved':
                 return (
-                    <SavedEventsView
-                        events={events.filter(event => favoriteEvents.includes(event.id))}
+                    <SavedEventsPage
+                        events={events}
                         onToggleFavorite={toggleFavoriteHandler}
                         onDeleteEvent={deleteEventHandler}
                         favoriteEvents={favoriteEvents}
@@ -159,7 +161,7 @@ const App: React.FC = () => {
                 );
             case 'dashboard':
                 return (
-                    <Dashboard
+                    <DashboardPage
                         moods={moods}
                         onAddMood={addMoodHandler}
                         onDeleteMood={deleteMoodHandler}
@@ -167,7 +169,7 @@ const App: React.FC = () => {
                 );
             case 'drafts':
                 return (
-                    <DraftsView
+                    <DraftsPage
                         drafts={drafts}
                         onEditDraft={editDraftOrEventHandler}
                         onDeleteDraft={deleteDraftHandler}
@@ -175,22 +177,27 @@ const App: React.FC = () => {
                 );
             case 'list-table':
                 return (
-                    <EventTableView
-                        events={events}
-                        onEditEvent={editDraftOrEventHandler}
-                        onDeleteEvent={deleteEventHandler}
-                    />
-                );
-            case 'list-cards':
-            default:
-                return (
-                    <EventList
+                    <EventsPage
                         events={events}
                         onToggleFavorite={toggleFavoriteHandler}
                         onDeleteEvent={deleteEventHandler}
                         favoriteEvents={favoriteEvents}
                         onEditEvent={editDraftOrEventHandler}
                         moods={moods}
+                        viewType="list-table"
+                    />
+                );
+            case 'list-cards':
+            default:
+                return (
+                    <EventsPage
+                        events={events}
+                        onToggleFavorite={toggleFavoriteHandler}
+                        onDeleteEvent={deleteEventHandler}
+                        favoriteEvents={favoriteEvents}
+                        onEditEvent={editDraftOrEventHandler}
+                        moods={moods}
+                        viewType="list-cards"
                     />
                 );
         }

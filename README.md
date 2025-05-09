@@ -1,54 +1,77 @@
-# React + TypeScript + Vite
+# Parchify - App de Eventos por Estado de Ánimo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Parchify es una aplicación para descubrir eventos según tu estado de ánimo, permitiéndote organizar, guardar y compartir tus planes. 
 
-Currently, two official plugins are available:
+## Características principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Descubre eventos filtrados por mood (estado de ánimo)
+- Guarda tus eventos favoritos
+- Visualiza eventos en modo calendario
+- Guarda borradores de eventos para completar después
+- Añade y administra tus propios moods personalizados
 
-## Expanding the ESLint configuration
+## Estructura del proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+El proyecto sigue una arquitectura modular basada en componentes, con una clara separación de responsabilidades:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+src/
+├── assets/        # Recursos estáticos (imágenes, iconos, etc.)
+├── components/    # Componentes reutilizables
+│   ├── calendar/  # Componentes específicos del calendario
+│   ├── dashboard/ # Componentes del dashboard (moods)
+│   ├── events/    # Componentes relacionados con eventos
+│   └── layout/    # Componentes de estructura (navbar, sidebar)
+├── constants/     # Constantes y configuración
+├── pages/         # Páginas o vistas principales
+│   ├── CalendarPage/
+│   ├── Dashboard/
+│   ├── DraftsPage/
+│   ├── EventFormPage/
+│   ├── EventsPage/
+│   └── SavedEventsPage/
+├── styles/        # Estilos globales y variables
+│   └── abstracts/ # Variables y mixins SCSS
+├── types/         # Definiciones de tipos TypeScript
+├── App.tsx        # Componente principal
+└── main.tsx       # Punto de entrada
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Convenciones de código
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Componentes**: Cada componente tiene su propio archivo `.tsx` y archivos `.scss` asociados
+- **Páginas**: Cada página encapsula uno o más componentes y maneja la lógica específica de esa vista
+- **Tipos**: Definiciones de TypeScript centralizadas en la carpeta `types`
+- **Estilos**: Utilizamos SCSS con variables y mixins centralizados
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Desarrollo
+
+### Requisitos
+
+- Node.js v16.0 o superior
+- npm v8.0 o superior
+
+### Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/BrianCodos/ParchifyUpdated.git
+
+# Instalar dependencias
+cd parchify
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
 ```
+
+### Scripts disponibles
+
+- `npm run dev`: Inicia el servidor de desarrollo
+- `npm run build`: Compila la aplicación para producción
+- `npm run lint`: Verifica errores de linting
+- `npm run organize`: Ejecuta el script de organización y limpieza del proyecto
+
+## Licencia
+
+Este proyecto es propiedad de Parchify 2024.
