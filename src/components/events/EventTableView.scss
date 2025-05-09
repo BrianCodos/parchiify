@@ -3,14 +3,14 @@
 
 .event-table {
   &-container {
-    background-color: #171e2e;
-    border-radius: $border-radius-xl;
-    box-shadow: $shadow-lg;
-    width: 100%;
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 25px;
-    color: $color-text;
+    width: 100%;
+    overflow-x: hidden;
+    @include flex-column;
+    
+    @include screen-sm {
+      padding: $spacing-xl;
+    }
   }
 
   &-title {

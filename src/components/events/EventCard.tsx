@@ -98,8 +98,8 @@ const EventCard: React.FC<EventCardProps> = ({
                 className={`event-card ${isDraftCard ? 'draft-card' : ''}`}
                 onClick={handleCardClick}
             >
-                <div className="event-card-two-columns">
-                    {/* Column 1: Event Image Section */}
+                {/* Image Container (16:9 ratio) with overlays */}
+                <div className="event-card-image-wrapper">
                     <div className="event-card-image-container">
                         {event.imageUrl ? (
                             <img 
@@ -113,85 +113,41 @@ const EventCard: React.FC<EventCardProps> = ({
                             </div>
                         )}
                         
-                        {/* Favorite Button (prominently displayed over the image) */}
-                        {!isDraftCard && (
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onToggleFavorite(event.id); }}
-                                className={`event-card-favorite-btn ${isFavorited ? 'favorited' : ''}`}
-                                aria-label={isFavorited ? "Quitar de favoritos" : "Agregar a favoritos"}
-                            >
-                                <i className="fas fa-star"></i>
-                            </button>
-                        )}
-                        
-                        {/* Draft Badge */}
-                        {isDraftCard && (
-                            <span className="event-card-draft-badge">Borrador</span>
-                        )}
-                    </div>
-                    
-                    {/* Column 2: Event Content Section */}
-                    <div className="event-card-content">
-                        <div className="event-card-header">
-                            <h3 className="event-card-title">{event.place}</h3>
-                            <div className="event-card-actions">
+                        {/* Action buttons overlay */}
+                        <div className="event-card-overlay-actions">
+                            {/* Favorite Button */}
+                            {!isDraftCard && (
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); onEditEvent(event); }}
-                                    className="event-card-action-btn edit"
-                                    aria-label="Editar evento"
+                                    onClick={(e) => { e.stopPropagation(); onToggleFavorite(event.id); }}
+                                    className={`event-card-action-btn favorite ${isFavorited ? 'favorited' : ''}`}
+                                    aria-label={isFavorited ? "Quitar de favoritos" : "Agregar a favoritos"}
                                 >
-                                    <i className="fas fa-edit"></i>
+                                    <i className="fas fa-star"></i>
                                 </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); onDeleteEvent(event.id); }}
-                                    className="event-card-action-btn delete"
-                                    aria-label="Eliminar evento"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div className="event-card-info">
-                            <div className="event-info-item">
-                                <i className="fas fa-map-marker-alt"></i>
-                                <span>{event.city}</span>
-                            </div>
-                            <div className="event-info-item">
-                                <i className="fas fa-calendar-alt"></i>
-                                <span>{formattedDate}</span>
-                            </div>
-                            
-                            {/* Entry Fee Information */}
-                            <div className="event-info-item">
-                                <i className="fas fa-ticket-alt"></i>
-                                {(event as any).entryType === 'free' ? (
-                                    <span className="event-free-entry">Entrada gratuita</span>
-                                ) : (event as any).coverFee ? (
-                                    <span className="event-cover-fee">Cover: {(event as any).coverFee}</span>
-                                ) : (
-                                    <span>Precio no especificado</span>
-                                )}
-                            </div>
-                            
-                            {/* Link to event if available */}
-                            {event.link && (
-                                <a
-                                    href={event.link.startsWith('http') ? event.link : `http://${event.link}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={handleLinkClick}
-                                    className="event-card-link"
-                                >
-                                    <i className="fas fa-external-link-alt"></i>
-                                    <span>Ver enlace</span>
-                                </a>
                             )}
+                            
+                            {/* Edit Button */}
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onEditEvent(event); }}
+                                className="event-card-action-btn edit"
+                                aria-label="Editar evento"
+                            >
+                                <i className="fas fa-edit"></i>
+                            </button>
+                            
+                            {/* Delete Button */}
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onDeleteEvent(event.id); }}
+                                className="event-card-action-btn delete"
+                                aria-label="Eliminar evento"
+                            >
+                                <i className="fas fa-trash-alt"></i>
+                            </button>
                         </div>
                         
-                        {/* Mood Tags */}
+                        {/* Mood Tags overlay */}
                         {moodTags.length > 0 && (
-                            <div className="event-card-moods">
+                            <div className="event-card-overlay-moods">
                                 {moodTags.map((mood, index) => (
                                     <span key={index} className="event-card-mood-tag">
                                         {mood.trim()}
@@ -200,16 +156,63 @@ const EventCard: React.FC<EventCardProps> = ({
                             </div>
                         )}
                         
-                        {/* Event Notes */}
-                        {event.notes && (
-                            <div className="event-card-notes">
-                                <p>
-                                    <i className="fas fa-sticky-note"></i>
-                                    {event.notes}
-                                </p>
-                            </div>
+                        {/* Draft Badge if needed */}
+                        {isDraftCard && (
+                            <span className="event-card-draft-badge">Borrador</span>
                         )}
                     </div>
+                </div>
+                    
+                {/* Event Content Section (below image) */}
+                <div className="event-card-content">
+                    <h3 className="event-card-title">{event.place}</h3>
+                    
+                    <div className="event-card-info">
+                        <div className="event-info-item">
+                            <i className="fas fa-map-marker-alt"></i>
+                            <span>{event.city}</span>
+                        </div>
+                        <div className="event-info-item">
+                            <i className="fas fa-calendar-alt"></i>
+                            <span>{formattedDate}</span>
+                        </div>
+                        
+                        {/* Entry Fee Information */}
+                        <div className="event-info-item">
+                            <i className="fas fa-ticket-alt"></i>
+                            {(event as any).entryType === 'free' ? (
+                                <span className="event-free-entry">Entrada gratuita</span>
+                            ) : (event as any).coverFee ? (
+                                <span className="event-cover-fee">Cover: {(event as any).coverFee}</span>
+                            ) : (
+                                <span>Precio no especificado</span>
+                            )}
+                        </div>
+                        
+                        {/* Link to event if available */}
+                        {event.link && (
+                            <a
+                                href={event.link.startsWith('http') ? event.link : `http://${event.link}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={handleLinkClick}
+                                className="event-card-link"
+                            >
+                                <i className="fas fa-external-link-alt"></i>
+                                <span>Ver enlace</span>
+                            </a>
+                        )}
+                    </div>
+                    
+                    {/* Event Notes */}
+                    {/* {event.notes && (
+                        <div className="event-card-notes">
+                            <p>
+                                <i className="fas fa-sticky-note"></i>
+                                {event.notes}
+                            </p>
+                        </div>
+                    )} */}
                 </div>
             </div>
 

@@ -16,9 +16,9 @@ const EventTableView: React.FC<EventTableViewProps> = ({
     const sortedEvents = [...events].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
-        <div className="event-table-container">
-            <h2 className="event-table-title">Tabla de Eventos</h2>
-            <p className="event-table-subtitle">Visualiza todos tus eventos en formato de tabla</p>
+        <div className="dashboard-section">
+            <h2 className="dashboard-title">Tabla de Eventos</h2>
+            <p className="dashboard-subtitle">Visualiza todos tus eventos en formato de tabla</p>
             
             {sortedEvents.length > 0 ? (
                 <div className="event-table-content">
