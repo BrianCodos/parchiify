@@ -133,3 +133,28 @@
   padding: $spacing-base;
   box-shadow: $shadow-md;
 } 
+
+@mixin primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md 4rem;
+  border: none;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-lg;
+  color: white;
+  background: $gradient-primary;
+  @include transition;
+  box-shadow: $shadow-md;
+  @include truncate;
+
+  &:hover {
+    background: $gradient-primary-hover;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $shadow-focus;
+  }
+}

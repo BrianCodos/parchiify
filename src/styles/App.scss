@@ -46,20 +46,20 @@
 
 /* Content wrapper */
 .content-wrapper {
-  background: $gradient-content-bg;
+  background: $color-bg;
   width: 100%;
-  padding: $spacing-base;
+  padding: $spacing-2xl;
   overflow-x: hidden;
   @include flex-column;
   flex-grow: 1;
   min-height: 0;
   
   @include screen-sm {
-    padding: $spacing-lg;
+    // padding: $spacing-lg;
   }
   
   @include screen-lg {
-    padding: $spacing-xl;
+    // padding: $spacing-xl;
   }
 }
 
@@ -73,7 +73,7 @@
   @include transition;
   @include flex-column;
   justify-content: center;
-  padding: $spacing-base 0;
+  // padding: $spacing-base 0;
 }
 
 /* Glass effect for cards and containers */

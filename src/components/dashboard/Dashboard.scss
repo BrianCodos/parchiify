@@ -3,19 +3,20 @@
 
 .dashboard {
   &-container {
-    background-color: #171e2e;
-    border-radius: $border-radius-xl;
-    box-shadow: $shadow-lg;
-    width: 100%;
-    max-width: 1000px;
+    width: 90%;
+    max-width: 80%;
     margin: 0 auto;
-    padding: 25px;
-    color: $color-text;
+    overflow-x: hidden;
+    @include flex-column;
+    
+    @include screen-sm {
+      padding: $spacing-xl;
+    }
   }
 
   &-title {
-    color: #8ba4fe;
-    font-size: 26px;
+    color: $color-primary;
+    font-size: $font-size-headline;
     font-weight: $font-weight-semibold;
     text-align: center;
     margin-bottom: $spacing-sm;
@@ -23,7 +24,7 @@
 
   &-subtitle {
     color: #656b7c;
-    font-size: $font-size-base;
+    font-size: $font-size-subheadline;
     text-align: center;
     margin-bottom: $spacing-2xl;
   }
@@ -44,14 +45,15 @@
     }
     
     &-title {
-      font-size: $font-size-xl;
-      font-weight: $font-weight-semibold;
+      font-size: $font-size-title;
+      font-weight:$font-size-title;
       color: $color-text;
     }
     
     &-description {
-      color: #656b7c;
-      font-size: $font-size-sm;
+      color: $color-text;
+      font-weight: $font-weight-light;
+      font-size: $font-size-bodyText;
       margin-bottom: $spacing-xl;
     }
   }
@@ -107,8 +109,8 @@
   }
 
   &-item {
-    background-color: #1a2030;
-    border: 1px solid #2f3649;
+    background-color: $color-bg-secondary;
+    border: 1px solid $color-border;
     border-radius: $border-radius-md;
     padding: $spacing-sm $spacing-base;
     display: flex;

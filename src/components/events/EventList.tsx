@@ -1,3 +1,5 @@
+/** @jsx React.createElement */
+/** @jsxFrag React.Fragment */
 import React, { useState, useEffect } from 'react';
 import type { Event } from '../../types';
 import EventCard from './EventCard';
@@ -112,10 +114,8 @@ return (
         <header className="event-list-header">
             <h1 className="event-list-title">Jamás te volverás a perder de nada, tenemos el plan perfecto para tu estado de animo</h1>
         </header>
-        
-        {/* Sección de búsqueda y filtros */}
-        <div className="event-search-filters">
-            {/* Contenedor de búsqueda */}
+        {/* Search container */}
+        <div className="search-container-wrapper">
             <div className="search-container">
                 <i className="fas fa-search search-icon"></i>
                 <input
@@ -131,56 +131,26 @@ return (
                     </button>
                 )}
             </div>
-            
-            {/* Filtros avanzados: Ciudad y Hora */}
-            <div className="advanced-filters">
-                <div className="filter-row">
-                    <div className="filter-group">
-                        <label>Ciudad:</label>
-                        <select
-                            value={selectedCity}
-                            onChange={(e) => setSelectedCity(e.target.value)}
-                            className="filter-select"
-                        >
-                            <option value="">Todas las ciudades</option>
-                            {cities.map(city => (
-                                <option key={city} value={city}>{city}</option>
-                            ))}
-                        </select>
-                    </div>
-                    
-                    <div className="filter-group">
-                        <label>Hora:</label>
-                        <select
-                            value={timeFilter}
-                            onChange={(e) => setTimeFilter(e.target.value)}
-                            className="filter-select"
-                        >
-                            <option value="">Cualquier hora</option>
-                            <option value="morning">Mañana (6am-12pm)</option>
-                            <option value="afternoon">Tarde (12pm-6pm)</option>
-                            <option value="evening">Noche (6pm-10pm)</option>
-                            <option value="night">Madrugada (10pm-6am)</option>
-                        </select>
-                    </div>
-                    
-                    {/* Botón para limpiar filtros */}
-                    {(selectedCity || timeFilter || selectedMoods.length > 0) && (
-                        <button className="clear-filters-btn" onClick={clearFilters}>
-                            Limpiar filtros
-                        </button>
-                    )}
-                </div>
-            </div>
-            
-            {/* Sección de filtro por Mood */}
+            {/* <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="filter-select"
+            >
+                <option value="">Todas las ciudades</option>
+                {cities.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                ))}
+            </select> */}
+            <button className="primary-btn">
+                Buscame el mejor plan
+            </button>
+        </div>
+        <h1 className='mood-filter-title'>Buscada por mood</h1>
+         {/* Sección de filtro por Mood */}
             <div className="mood-filter-container">
-                
-                
                 <div className="mood-filter-options">
                     {moods.map(mood => (
-                        <div className="mood-filter-btn-container">
-                            <h2>Imagen</h2>
+                       
                              <button
                             key={mood}
                             className={`mood-filter-btn ${selectedMoods.includes(mood) ? 'active' : ''}`}
@@ -189,12 +159,13 @@ return (
                         >
                             {mood}
                         </button>
-                        </div>
+                        
                        
                     ))}
                 </div>
             </div>
-        </div>
+
+           
         
         {/* Sección de resultados */}
         <div className="event-list-content">

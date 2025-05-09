@@ -1,3 +1,4 @@
+@import './mixins';
 // Typography
 $font-family-primary: 'Outfit', system-ui, 'Avenir', 'Helvetica', 'Arial', sans-serif;
 $font-weight-light: 300;
@@ -7,6 +8,11 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
 // Font Sizes
+$font-size-bodyText: 1.35rem;
+$font-size-headline: 3.5rem;
+$font-size-subheadline: 2rem;
+$font-size-title: 1.8rem;
+// -
 $font-size-xs: 0.75rem;    // 12px
 $font-size-sm: 0.875rem;   // 14px
 $font-size-base: 1rem;     // 16px
@@ -27,11 +33,11 @@ $color-text-secondary: #d1d5db;
 $color-text-tertiary: #9ca3af;
 $color-text-muted: #6b7280;
 
-$color-bg: #0f172a;
-$color-bg-secondary: #1e293b;
+$color-bg: #11141f;
+$color-bg-secondary: #1a2030;
 $color-bg-tertiary: #111827;
-$color-bg-gradient-start: #111827;
-$color-bg-gradient-end: #1f2937;
+$color-bg-gradient-start: #070c16;
+$color-bg-gradient-end: #000000;
 
 // Colors - Brand
 $color-primary: #6366f1;
@@ -42,7 +48,8 @@ $color-accent-dark: #7c3aed;
 $color-accent-light: #a78bfa;
 
 // Colors - UI
-$color-border: #374151;
+$color-border: #2f3649;
+$color-border-primary: $color-primary;
 $color-border-light: rgba(55, 65, 81, 0.5);
 $color-shadow: rgba(0, 0, 0, 0.1);
 $color-shadow-dark: rgba(0, 0, 0, 0.2);
@@ -54,7 +61,7 @@ $color-glass-border: rgba(75, 85, 99, 0.3);
 $gradient-primary: linear-gradient(to right, $color-primary, $color-accent);
 $gradient-primary-hover: linear-gradient(to right, $color-primary-dark, $color-accent-dark);
 $gradient-bg: linear-gradient(to bottom, $color-bg-gradient-start, $color-bg-gradient-end);
-$gradient-content-bg: radial-gradient(circle at 50% 30%, #171e5f 0%, $color-bg-gradient-end 100%);
+$gradient-content-bg: radial-gradient(circle at 50% 30%, #222222 0%, $color-bg-gradient-end 100%);
 
 // Spacing
 $spacing-xs: 0.25rem;  // 4px
@@ -106,3 +113,7 @@ $scrollbar-width: 8px;
 $scrollbar-track-bg: rgba(31, 41, 55, 0.3);
 $scrollbar-thumb-bg: rgba(79, 70, 229, 0.5);
 $scrollbar-thumb-hover-bg: rgba(79, 70, 229, 0.7); 
+
+.primary-btn {
+  @include primary-btn;
+}
