@@ -20,15 +20,18 @@
   text-align: center;
 }
 
+
 .event-list-title {
   font-size: 3.25rem;
-  font-weight: 700;
-  background: linear-gradient(120deg, #818cf8, #c084fc);
+  font-weight: 400;
+  line-height: 1.1;
+  background: linear-gradient(120deg, #4f46e5 0%, #a855f7 50%, #c084fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   margin-bottom: 0.5rem;
 }
+
 
 .event-list-subtitle {
   color: #94a3b8;
@@ -37,10 +40,15 @@
 
 /* Search and Filters */
 .event-search-filters {
-  margin-bottom: 2rem;
+  border-radius: 10px;
+  margin-bottom: 5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: .5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 3rem;
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Search container */
@@ -104,10 +112,11 @@
 
 /* Mood filter container */
 .mood-filter-container {
-  /* background-color: #1e293b;
-  border: 1px solid #334155; */
-  border-radius: 10px;
-  margin-bottom: 5rem;
+  gap: .5rem;
+  display: flex;
+  align-items: center;
+
+
   /* padding: 16px; */
 }
 
@@ -120,9 +129,10 @@
 
 .mood-filter-header h3 {
   color: #e2e8f0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   margin: 0;
+  height: 100%;
 }
 
 .clear-filters-btn {
@@ -145,24 +155,31 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 12px;
 }
-
+.mood-filter-btn-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2b2b2b;
+  color: #1e293b;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 14px;
+  height: 100px;
+  width: 130px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mood-filter-btn-container img{
+  color: #64748b;
+}
 .mood-filter-btn {
-    display: flex;
-    align-items: center;
-    background-color: #e2e8f0;
-    color: #1e293b;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+  all: unset;
+  color: #6366f1;
 }
 
-.mood-filter-btn::before {
+/* .mood-filter-btn::before {
     content: '';
     display: inline-block;
     width: 18px;
@@ -171,7 +188,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-}
+} */
 
 .mood-filter-btn[data-mood="Comer"]::before {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>');
@@ -298,7 +315,8 @@
 }
 
 .filter-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   flex-wrap: wrap;
   gap: 16px;
   align-items: center;
