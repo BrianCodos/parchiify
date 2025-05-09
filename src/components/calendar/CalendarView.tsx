@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { Event } from '../../types';
 import CalendarEventCard from './CalendarEventCard';
-import './CalendarView.css';
+import './CalendarView.scss';
 
 interface CalendarViewProps {
     events: Event[];

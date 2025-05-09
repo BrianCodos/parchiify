@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Event } from '../../types';
-import './CalendarEventCard.css';
+import './CalendarEventCard.scss';
 
 interface CalendarEventCardProps {
     event: Event;

@@ -1,0 +1,154 @@
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+/* App container */
+.app-container {
+  background: $gradient-bg;
+  color: $color-text;
+  height: 100vh;
+  @include flex-column;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* App content */
+.app-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  width: 100%;
+  height: calc(100vh - 4rem);
+}
+
+/* Sidebar overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: $color-overlay;
+  backdrop-filter: blur(4px);
+  z-index: $z-sticky;
+  
+  @include screen-md {
+    display: none;
+  }
+}
+
+/* Main content */
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 100%;
+  height: 100%;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  background: $gradient-content-bg;
+  width: 100%;
+  padding: $spacing-base;
+  overflow-x: hidden;
+  @include flex-column;
+  flex-grow: 1;
+  min-height: 0;
+  
+  @include screen-sm {
+    padding: $spacing-lg;
+  }
+  
+  @include screen-lg {
+    padding: $spacing-xl;
+  }
+}
+
+/* Content container */
+.content-container {
+  background-color: transparent;
+  border-radius: $border-radius-lg;
+  overflow-x: hidden;
+  width: 100%;
+  flex: 1;
+  @include transition;
+  @include flex-column;
+  justify-content: center;
+  padding: $spacing-base 0;
+}
+
+/* Glass effect for cards and containers */
+.glass-effect {
+  @include glass-effect;
+}
+
+/* Animation for transitions */
+.fade-in {
+  animation: fadeIn $transition-normal ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Additional styles for text color */
+.text-gray-500 {
+  color: $color-text-tertiary;
+}
+
+.text-gray-600 {
+  color: $color-text-muted;
+}
+
+/* Glow effects for highlights */
+.glow-effect {
+  box-shadow: 0 0 15px rgba($color-primary, 0.5);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba($color-accent, 0.5);
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  @include transition(filter);
+  
+  &:hover {
+    filter: drop-shadow(0 0 2em rgba($color-primary, 0.667));
+  }
+  
+  &.react:hover {
+    filter: drop-shadow(0 0 2em rgba(97, 218, 251, 0.667));
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: $spacing-xl;
+}
+
+.read-the-docs {
+  color: #888;
+} 

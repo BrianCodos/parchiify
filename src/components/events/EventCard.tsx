@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Event } from '../../types';
-import './EventCard.css';
+import './EventCard.scss';
 import EventDetailView from './EventDetailView';
 
 interface EventCardProps {

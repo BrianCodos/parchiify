@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Event } from '../../types';
 import EventCard from './EventCard';
-import './EventList.css';
+import './EventList.scss';
 
 interface EventListProps {
     events: Event[];

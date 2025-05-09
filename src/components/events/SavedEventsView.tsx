@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Event } from '../../types';
 import EventCard from './EventCard';
-import './SavedEventsView.css';
+import './SavedEventsView.scss';
 
 interface SavedEventsViewProps {
     events: Event[];

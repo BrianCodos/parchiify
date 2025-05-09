@@ -11,7 +11,7 @@ import DraftsView from './components/events/DraftsView';
 import Dashboard from './components/dashboard/Dashboard';
 import CalendarView from './components/calendar/CalendarView';
 import { DEFAULT_MOODS } from './constants';
-import './App.css';
+import './styles/App.scss';
 
 const App: React.FC = () => {
     const [currentView, setCurrentView] = useState<ViewType>('list-cards');

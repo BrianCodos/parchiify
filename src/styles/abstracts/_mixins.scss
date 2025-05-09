@@ -1,0 +1,135 @@
+// Flexbox mixins
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Media query mixins
+@mixin screen-sm {
+  @media (min-width: $screen-sm) {
+    @content;
+  }
+}
+
+@mixin screen-md {
+  @media (min-width: $screen-md) {
+    @content;
+  }
+}
+
+@mixin screen-lg {
+  @media (min-width: $screen-lg) {
+    @content;
+  }
+}
+
+@mixin screen-xl {
+  @media (min-width: $screen-xl) {
+    @content;
+  }
+}
+
+@mixin screen-2xl {
+  @media (min-width: $screen-2xl) {
+    @content;
+  }
+}
+
+// Text truncation
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Glass effect mixin
+@mixin glass-effect {
+  background: $color-glass-bg;
+  backdrop-filter: blur(8px);
+  border: 1px solid $color-glass-border;
+  box-shadow: $shadow-lg;
+}
+
+// Scrollbar styling
+@mixin styled-scrollbar {
+  &::-webkit-scrollbar {
+    width: $scrollbar-width;
+    height: $scrollbar-width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $scrollbar-track-bg;
+    border-radius: $border-radius-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-thumb-bg;
+    border-radius: $border-radius-full;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: $scrollbar-thumb-hover-bg;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb-bg $scrollbar-track-bg;
+}
+
+// Gradient text
+@mixin text-gradient {
+  background: $gradient-primary;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+// Transition mixin
+@mixin transition($property: all, $duration: $transition-normal, $timing: ease-in-out) {
+  transition: $property $duration $timing;
+}
+
+// Focus ring style
+@mixin focus-ring {
+  outline: none;
+  box-shadow: $shadow-focus;
+}
+
+// Button reset
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+// Card style
+@mixin card {
+  background-color: $color-bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-base;
+  box-shadow: $shadow-md;
+} 

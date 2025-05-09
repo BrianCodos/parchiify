@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { MoodHandlers } from '../../types';
-import './Dashboard.css';
+import './Dashboard.scss';
 
 interface DashboardProps extends MoodHandlers {
     moods: string[];

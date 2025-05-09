@@ -1,0 +1,147 @@
+@import '../../styles/abstracts/variables';
+@import '../../styles/abstracts/mixins';
+
+.event-table {
+  &-container {
+    background-color: #171e2e;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-lg;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px;
+    color: $color-text;
+  }
+
+  &-title {
+    color: #8ba4fe;
+    font-size: 26px;
+    font-weight: $font-weight-semibold;
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+  }
+
+  &-subtitle {
+    color: #656b7c;
+    font-size: $font-size-base;
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+  }
+
+  &-content {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: $border-radius-lg;
+  }
+
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+
+  th {
+    background-color: #232938;
+    color: #8ba4fe;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #2f3649;
+
+    &:first-child {
+      border-top-left-radius: $border-radius-lg;
+    }
+
+    &:last-child {
+      border-top-right-radius: $border-radius-lg;
+    }
+  }
+
+  tr {
+    &:last-child {
+      td {
+        border-bottom: none;
+
+        &:first-child {
+          border-bottom-left-radius: $border-radius-lg;
+        }
+
+        &:last-child {
+          border-bottom-right-radius: $border-radius-lg;
+        }
+      }
+    }
+
+    &:hover td {
+      background-color: #212636;
+    }
+  }
+
+  td {
+    background-color: #1a2030;
+    color: #d9dbe1;
+    padding: 15px;
+    border-bottom: 1px solid #2f3649;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-sm;
+  }
+
+  &-btn {
+    width: 36px;
+    height: 36px;
+    @include flex-center;
+    border-radius: 50%;
+    background-color: #232938;
+    border: none;
+    cursor: pointer;
+    @include transition;
+
+    &.edit {
+      color: #6b7cfe;
+
+      &:hover {
+        background-color: rgba(107, 124, 254, 0.2);
+      }
+    }
+
+    &.delete {
+      color: #ef4444;
+
+      &:hover {
+        background-color: rgba(239, 68, 68, 0.2);
+      }
+    }
+  }
+
+  &-empty {
+    text-align: center;
+    padding: $spacing-3xl $spacing-xl;
+    background-color: #1a2030;
+    border: 2px dashed #2f3649;
+    border-radius: $border-radius-lg;
+    margin-top: $spacing-xl;
+
+    &-icon {
+      font-size: 36px;
+      color: #2f3649;
+      margin-bottom: 15px;
+    }
+
+    &-text {
+      color: #8ba4fe;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-medium;
+      margin-bottom: $spacing-sm;
+    }
+
+    &-subtext {
+      color: #656b7c;
+      font-size: $font-size-sm;
+    }
+  }
+} 

@@ -1,0 +1,106 @@
+@import '../../styles/abstracts/variables';
+@import '../../styles/abstracts/mixins';
+
+.saved-events {
+  &-container {
+    background-color: $color-bg;
+    border-radius: $border-radius-xl;
+    border: 1px solid $color-bg-secondary;
+    padding: $spacing-lg;
+    width: 100%;
+    @include flex-column;
+    box-shadow: $shadow-lg;
+    
+    @include screen-sm {
+      padding: $spacing-xl;
+    }
+  }
+
+  &-header {
+    margin-bottom: $spacing-xl;
+    text-align: center;
+  }
+
+  &-title {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-bold;
+    background: linear-gradient(120deg, #f9a8d4, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: $spacing-sm;
+  }
+
+  &-subtitle {
+    color: #94a3b8;
+    font-size: 1.1rem;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    width: 100%;
+    
+    @include screen-md {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include screen-xl {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &-empty {
+    text-align: center;
+    padding: $spacing-2xl $spacing-lg;
+    width: 100%;
+    margin: $spacing-base 0;
+    border: 2px dashed #334155;
+    border-radius: $border-radius-lg;
+    background-color: rgba($color-bg-secondary, 0.3);
+  }
+}
+
+.empty {
+  &-star-icon {
+    @include flex-center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background-color: rgba(51, 65, 85, 0.5);
+    margin-bottom: $spacing-lg;
+    
+    i {
+      font-size: $font-size-4xl;
+      color: #eab308;
+    }
+  }
+
+  &-title {
+    color: $color-text;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-sm;
+  }
+
+  &-message {
+    color: #94a3b8;
+    font-size: $font-size-base;
+    margin-bottom: $spacing-lg;
+  }
+
+  &-tip {
+    color: $color-text-secondary;
+    font-size: 0.9rem;
+    background-color: rgba(51, 65, 85, 0.5);
+    padding: $spacing-md $spacing-lg;
+    border-radius: $border-radius-lg;
+    display: inline-block;
+  }
+}
+
+.example-star {
+  color: #eab308;
+  margin: 0 $spacing-xs;
+} 

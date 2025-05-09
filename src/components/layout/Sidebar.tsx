@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ViewType } from '../../types';
-import './Sidebar.css';
+import './Sidebar.scss';
 
 interface SidebarProps {
     setCurrentView: (view: ViewType) => void;

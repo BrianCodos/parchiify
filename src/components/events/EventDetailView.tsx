@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Event } from '../../types';
-import './EventDetailView.css';
+import './EventDetailView.scss';
 
 interface EventDetailViewProps {
     event: Event;

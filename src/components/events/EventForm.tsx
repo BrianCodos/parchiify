@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Event, EventFormData } from '../../types';
-import './EventForm.css';
+import './EventForm.scss';
 
 interface EventFormProps {
     onAddEvent: (event: Event) => void;

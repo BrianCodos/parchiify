@@ -1,0 +1,63 @@
+@import '../../styles/abstracts/variables';
+@import '../../styles/abstracts/mixins';
+
+.drafts {
+  &-container {
+    background-color: #171e2e;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-lg;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px;
+    color: $color-text;
+  }
+
+  &-title {
+    color: #8ba4fe;
+    font-size: 26px;
+    font-weight: $font-weight-semibold;
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+  }
+
+  &-subtitle {
+    color: #656b7c;
+    font-size: $font-size-base;
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $spacing-xl;
+  }
+
+  &-empty {
+    text-align: center;
+    padding: $spacing-3xl $spacing-xl;
+    background-color: #1a2030;
+    border: 2px dashed #2f3649;
+    border-radius: $border-radius-lg;
+    margin-top: $spacing-xl;
+    
+    &-icon {
+      font-size: 36px;
+      color: #2f3649;
+      margin-bottom: 15px;
+    }
+    
+    &-title {
+      color: #8ba4fe;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-medium;
+      margin-bottom: $spacing-sm;
+    }
+    
+    &-text {
+      color: #656b7c;
+      font-size: $font-size-sm;
+    }
+  }
+} 

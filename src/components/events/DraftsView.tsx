@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Event } from '../../types';
 import EventCard from './EventCard';
-import './DraftsView.css';
+import './DraftsView.scss';
 
 interface DraftsViewProps {
     drafts: Event[];
