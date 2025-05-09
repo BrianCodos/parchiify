@@ -1,6 +1,17 @@
-export { default as EventsPage } from './EventsPage';
-export { default as DashboardPage } from './Dashboard';
-export { default as CalendarPage } from './CalendarPage';
-export { default as SavedEventsPage } from './SavedEventsPage';
-export { default as DraftsPage } from './DraftsPage';
-export { default as EventFormPage } from './EventFormPage'; 
+import EventsPage from './EventsPage';
+import DashboardPage from './Dashboard';
+import CalendarPage from './CalendarPage';
+import SavedEventsPage from './SavedEventsPage';
+import DraftsPage from './DraftsPage';
+import EventFormPage from './EventFormPage';
+import UserProfilePage from './UserProfilePage';
+
+export {
+    EventsPage,
+    DashboardPage,
+    CalendarPage,
+    SavedEventsPage,
+    DraftsPage,
+    EventFormPage,
+    UserProfilePage
+}; 

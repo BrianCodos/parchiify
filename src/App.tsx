@@ -1,14 +1,15 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import type { Event, ViewType } from './types';
-import { Navbar, Sidebar } from './components';
+import { Sidebar } from './components';
 import { 
     EventsPage, 
     DashboardPage, 
     CalendarPage, 
     SavedEventsPage, 
     DraftsPage, 
-    EventFormPage 
+    EventFormPage, 
+    UserProfilePage 
 } from './pages';
 import { DEFAULT_MOODS } from './constants';
 import './styles/App.scss';
@@ -39,7 +40,7 @@ const App: React.FC = () => {
         return DEFAULT_MOODS;
     });
     const [calendarDate, setCalendarDate] = useState<Date>(new Date());
-    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
     const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
     useEffect(() => {
@@ -187,6 +188,10 @@ const App: React.FC = () => {
                         viewType="list-table"
                     />
                 );
+            case 'profile':
+                return (
+                    <UserProfilePage />
+                );
             case 'list-cards':
             default:
                 return (
@@ -205,10 +210,6 @@ const App: React.FC = () => {
 
     return (
         <div className="app-container">
-            <Navbar 
-                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
-                onNewEvent={handleNewEvent}
-            />
             <div className="app-content">
                 <Sidebar
                     setCurrentView={setCurrentView}
@@ -216,8 +217,9 @@ const App: React.FC = () => {
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
                     setEditingEvent={setEditingEvent}
+                    onNewEvent={handleNewEvent}
                 />
-                {isSidebarOpen && (
+                {isSidebarOpen && window.innerWidth < 768 && (
                     <div
                         className="sidebar-overlay"
                         onClick={() => setIsSidebarOpen(false)}

@@ -10,7 +10,7 @@
   transform: translateX(-100%);
   @include transition(transform, width);
   z-index: $z-modal;
-  width: 16rem;
+  width: 18rem;
   background-color: rgba($color-bg-tertiary, 0.9);
   backdrop-filter: blur(12px);
   border-right: 1px solid $color-border;
@@ -25,11 +25,19 @@
   }
   
   &.collapsed {
-    width: 4rem;
+    width: 5rem;
     
-    .sidebar-label {
+    .sidebar-label, .sidebar-profile-text {
       display: none;
       opacity: 0;
+    }
+    
+    .sidebar-logo h1 {
+      font-size: 0;
+      
+      &:first-letter {
+        font-size: $font-size-2xl;
+      }
     }
     
     .sidebar-nav-item {
@@ -63,18 +71,22 @@
         white-space: nowrap;
       }
     }
+    
+    .sidebar-actions {
+      flex-direction: column;
+    }
   }
 
   @include screen-md {
     position: relative;
     transform: translateX(0);
     min-width: auto;
-    max-width: 16rem;
+    max-width: 18rem;
     height: 100%;
     
     &.collapsed {
-      min-width: 4rem;
-      max-width: 4rem;
+      min-width: 5rem;
+      max-width: 5rem;
     }
   }
 }
@@ -93,6 +105,22 @@
     height: 70px;
     align-items: center;
   }
+  
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.sidebar-logo {
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary-light;
+    margin: 0;
+    @include transition;
+  }
 }
 
 .sidebar-close-button,
@@ -100,7 +128,7 @@
   display: flex;
   padding: 0.375rem;
   border-radius: $border-radius-md;
-  color: $color-text-tertiary;
+  color: $color-primary;
   @include transition;
 
   &:hover {
@@ -116,9 +144,73 @@
 }
 
 .sidebar-collapse-button {
-  display: none;
-  @include screen-md {
+  display: flex;
+}
+
+/* Perfil de usuario en el sidebar */
+.sidebar-profile {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-base;
+  
+  .sidebar-profile-button {
     display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-xs;
+    border-radius: $border-radius-lg;
+    @include transition;
+    margin-bottom: $spacing-sm;
+    
+    &:hover {
+      background-color: rgba($color-bg-secondary, 0.5);
+    }
+  }
+  
+  .sidebar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $color-primary-light;
+  }
+  
+  .sidebar-profile-text {
+    color: $color-text;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+  }
+  
+  .sidebar-profile-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $spacing-xs;
+    padding-top: $spacing-xs;
+    padding-bottom: $spacing-xs;
+  }
+  
+  .sidebar-profile-action-button {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $border-radius-md;
+    color: $color-text-tertiary;
+    @include transition;
+    text-align: left;
+    width: 100%;
+    
+    &:hover {
+      color: white;
+      background-color: rgba($color-primary, 0.2);
+    }
+    
+    i {
+      width: 16px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
   }
 }
 
@@ -153,6 +245,7 @@
 
   &:hover {
     color: white;
+    background-color: rgba($color-bg-secondary, 0.3) !important;
   }
 
   &:focus {
@@ -162,7 +255,7 @@
 
   /* Color de los items activos */
   &.active {
-    background-color: transparent;
+    background-color: rgba($color-primary, 0.1) !important;
     color: $color-primary-light;
     font-weight: $font-weight-semibold;
   }

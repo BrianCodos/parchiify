@@ -19,7 +19,7 @@
   flex: 1;
   overflow: hidden;
   width: 100%;
-  height: calc(100vh - 4rem);
+  height: 100vh;
 }
 
 /* Sidebar overlay */
@@ -48,19 +48,13 @@
 .content-wrapper {
   background: $color-bg;
   width: 100%;
-  padding: $spacing-2xl;
   overflow-x: hidden;
   @include flex-column;
   flex-grow: 1;
   min-height: 0;
+  height: 100%;
   
-  @include screen-sm {
-    // padding: $spacing-lg;
-  }
-  
-  @include screen-lg {
-    // padding: $spacing-xl;
-  }
+
 }
 
 /* Content container */
@@ -73,7 +67,6 @@
   @include transition;
   @include flex-column;
   justify-content: center;
-  // padding: $spacing-base 0;
 }
 
 /* Glass effect for cards and containers */
@@ -95,6 +88,15 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Text gradient for logos and titles */
+.text-gradient {
+  background: $gradient-text;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline;
 }
 
 /* Additional styles for text color */
@@ -123,25 +125,6 @@
   
   &:hover {
     filter: drop-shadow(0 0 2em rgba($color-primary, 0.667));
-  }
-  
-  &.react:hover {
-    filter: drop-shadow(0 0 2em rgba(97, 218, 251, 0.667));
-  }
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
   }
 }
 

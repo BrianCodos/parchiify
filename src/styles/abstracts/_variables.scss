@@ -62,6 +62,7 @@ $gradient-primary: linear-gradient(to right, $color-primary, $color-accent);
 $gradient-primary-hover: linear-gradient(to right, $color-primary-dark, $color-accent-dark);
 $gradient-bg: linear-gradient(to bottom, $color-bg-gradient-start, $color-bg-gradient-end);
 $gradient-content-bg: radial-gradient(circle at 50% 30%, #222222 0%, $color-bg-gradient-end 100%);
+$gradient-text: linear-gradient(to right, $color-primary-light, $color-accent-light);
 
 // Spacing
 $spacing-xs: 0.25rem;  // 4px
