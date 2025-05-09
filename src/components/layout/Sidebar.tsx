@@ -36,8 +36,18 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentView, currentView, isOpen, 
 
                 <div className="sidebar-body styled-scrollbar">
                     <nav className="sidebar-nav">
+                        <button
+                            onClick={() => handleViewChange('form')}
+                            className="sidebar-add-button"
+                        >
+                            <i className="fas fa-plus sidebar-add-icon"></i>
+                            Nuevo Evento
+                        </button>
+
+                        <div className="sidebar-divider"></div>
+
                         {[
-                            { view: 'list-cards', label: 'Describir eventos', icon: 'fas fa-clipboard-list' },
+                            { view: 'list-cards', label: 'DESPARCHATE', icon: 'fas fa-clipboard-list' },
                             { view: 'list-table', label: 'Vista de Tabla', icon: 'fas fa-table' },
                             { view: 'calendar', label: 'Calendario', icon: 'fas fa-calendar-alt' },
                             { view: 'saved', label: 'Favoritos', icon: 'fas fa-star' },
@@ -53,16 +63,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setCurrentView, currentView, isOpen, 
                                 {item.label}
                             </button>
                         ))}
-                        
-                        <div className="sidebar-divider"></div>
-
-                        <button
-                            onClick={() => handleViewChange('form')}
-                            className="sidebar-add-button"
-                        >
-                            <i className="fas fa-plus sidebar-add-icon"></i>
-                            Nuevo Evento
-                        </button>
                     </nav>
                 </div>
             </div>

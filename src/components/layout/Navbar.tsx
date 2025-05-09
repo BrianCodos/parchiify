@@ -3,9 +3,10 @@ import './Navbar.css';
 
 interface NavbarProps {
     onToggleSidebar: () => void;
+    onNewEvent?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
+const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNewEvent }) => {
     return (
         <nav className="navbar">
             <div className="navbar-container">
@@ -25,6 +26,15 @@ const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
                 </div>
                 
                 <div className="navbar-end">
+                    <div className="navbar-item">
+                        <button 
+                            className="navbar-new-event-btn"
+                            onClick={onNewEvent}
+                        >
+                            <i className="fas fa-plus"></i>
+                            Nuevo Evento
+                        </button>
+                    </div>
                     <div className="navbar-item">
                         <button className="navbar-button">
                             <i className="fas fa-bell text-xl"></i>

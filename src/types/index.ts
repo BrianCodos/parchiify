@@ -3,6 +3,9 @@ export interface Event {
     place: string;
     city: string;
     date: string;
+    startTime?: string;
+    endTime?: string;
+    isFree?: boolean;
     link?: string;
     isDraft?: boolean;
     mood?: string;

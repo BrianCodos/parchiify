@@ -142,40 +142,78 @@
   display: block;
   font-size: 14px;
   color: #8ba4fe;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
 .moods-selector {
   background-color: #232938;
   border: 1px solid #2f3649;
-  border-radius: 6px;
-  padding: 15px;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .moods-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .mood-button {
-  background-color: #2f3649;
-  color: #d9dbe1;
+  display: flex;
+  align-items: center;
+  background-color: #334155;
+  color: #cbd5e1;
   border: none;
-  border-radius: 5px;
-  padding: 6px 12px;
-  font-size: 14px;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
+.mood-button::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mood-button[data-mood="Comer"]::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>');
+}
+
+.mood-button[data-mood="Parejas"]::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16.2A5 5 0 0 0 16.8 20H7.2A5 5 0 0 0 4 16.2V7.8A5 5 0 0 0 7.2 4h9.6A5 5 0 0 0 20 7.8V16.2z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>');
+}
+
+.mood-button[data-mood="Fiesta"]::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>');
+}
+
 .mood-button:hover {
-  background-color: #3a4356;
+  background-color: #475569;
 }
 
 .mood-button.selected {
-  background-color: #8ba4fe;
-  color: #171e2e;
+  background-color: #818cf8;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .moods-buttons {
+    gap: 8px;
+  }
+  
+  .mood-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
 }
 
 .notifications-container {
@@ -238,4 +276,78 @@
 
 .btn-save:hover {
   background-color: #27ae60;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
+.price-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.free-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #334155;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #6b7cfe;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(24px);
 } 

@@ -9,6 +9,7 @@ interface EventListProps {
     onDeleteEvent: (eventId: string) => void;
     onEditEvent: (event: Event) => void;
     favoriteEvents: string[];
+    moods?: string[];
 }
 
 const EventList: React.FC<EventListProps> = ({
@@ -16,27 +17,20 @@ const EventList: React.FC<EventListProps> = ({
     onToggleFavorite,
     onDeleteEvent,
     onEditEvent,
-    favoriteEvents
+    favoriteEvents,
+    moods = []
 }) => {
     // States for search and filtering
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
     const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
+    const [timeFilter, setTimeFilter] = useState('');
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     
-    // Extract all unique moods from events
-    const allMoods = React.useMemo(() => {
-        const moodSet = new Set<string>();
-        events.forEach(event => {
-            if (event.mood) {
-                event.mood.split(',').forEach(mood => {
-                    moodSet.add(mood.trim());
-                });
-            }
-        });
-        return Array.from(moodSet).sort();
-    }, [events]);
+    // Cities (could be fetched from API in a real app)
+    const cities = ['Cali', 'Bogotá', 'Medellín', 'Barranquilla', 'Cartagena'];
     
-    // Filter events based on search term and selected moods
+    // Filter events based on search term, city, moods, and time
     useEffect(() => {
         let filtered = [...events];
         
@@ -51,6 +45,11 @@ const EventList: React.FC<EventListProps> = ({
             );
         }
         
+        // Apply city filter
+        if (selectedCity) {
+            filtered = filtered.filter(event => event.city === selectedCity);
+        }
+        
         // Apply mood filter
         if (selectedMoods.length > 0) {
             filtered = filtered.filter(event => {
@@ -60,11 +59,34 @@ const EventList: React.FC<EventListProps> = ({
             });
         }
         
+        // Apply time filter
+        if (timeFilter) {
+            filtered = filtered.filter(event => {
+                if (!event.startTime) return false;
+                
+                // Handle different time filters
+                const eventTime = new Date(`2000-01-01T${event.startTime}`).getHours();
+                
+                switch(timeFilter) {
+                    case 'morning':
+                        return eventTime >= 6 && eventTime < 12;
+                    case 'afternoon':
+                        return eventTime >= 12 && eventTime < 18;
+                    case 'evening':
+                        return eventTime >= 18 && eventTime < 22;
+                    case 'night':
+                        return eventTime >= 22 || eventTime < 6;
+                    default:
+                        return true;
+                }
+            });
+        }
+        
         // Sort by date (newest first)
         filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         
         setFilteredEvents(filtered);
-    }, [events, searchTerm, selectedMoods]);
+    }, [events, searchTerm, selectedCity, selectedMoods, timeFilter]);
     
     // Toggle mood selection
     const toggleMoodFilter = (mood: string) => {
@@ -78,65 +100,107 @@ const EventList: React.FC<EventListProps> = ({
     // Clear all filters
     const clearFilters = () => {
         setSearchTerm('');
+        setSelectedCity('');
         setSelectedMoods([]);
+        setTimeFilter('');
     };
 
-    return (
-        <section className="event-list-container">
-            <header className="event-list-header">
-                <h1 className="event-list-title">
-                    Describir eventos
-                </h1>
-                <p className="event-list-subtitle">Gestiona tus eventos de manera eficiente</p>
-            </header>
+// Sección principal de la lista de eventos
+return (
+    <section className="event-list-container">
+        {/* Sección de encabezado */}
+        <header className="event-list-header">
+            <h1 className="event-list-title">Jamás te volverás a perder de nada</h1>
+        </header>
+        
+        {/* Sección de búsqueda y filtros */}
+        <div className="event-search-filters">
+            {/* Contenedor de búsqueda */}
+            <div className="search-container">
+                <i className="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    placeholder="Buscar eventos por nombre o descripción..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+                {searchTerm && (
+                    <button className="search-clear-btn" onClick={() => setSearchTerm('')}>
+                        <i className="fas fa-times"></i>
+                    </button>
+                )}
+            </div>
             
-            {/* Search and Filter Section */}
-            <div className="event-search-filters">
-                <div className="search-container">
-                    <i className="fas fa-search search-icon"></i>
-                    <input 
-                        type="text" 
-                        placeholder="Buscar eventos por nombre, ciudad o descripción..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
-                    />
-                    {searchTerm && (
-                        <button className="search-clear-btn" onClick={() => setSearchTerm('')}>
-                            <i className="fas fa-times"></i>
+            {/* Filtros avanzados: Ciudad y Hora */}
+            <div className="advanced-filters">
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label>Ciudad:</label>
+                        <select
+                            value={selectedCity}
+                            onChange={(e) => setSelectedCity(e.target.value)}
+                            className="filter-select"
+                        >
+                            <option value="">Todas las ciudades</option>
+                            {cities.map(city => (
+                                <option key={city} value={city}>{city}</option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                    <div className="filter-group">
+                        <label>Hora:</label>
+                        <select
+                            value={timeFilter}
+                            onChange={(e) => setTimeFilter(e.target.value)}
+                            className="filter-select"
+                        >
+                            <option value="">Cualquier hora</option>
+                            <option value="morning">Mañana (6am-12pm)</option>
+                            <option value="afternoon">Tarde (12pm-6pm)</option>
+                            <option value="evening">Noche (6pm-10pm)</option>
+                            <option value="night">Madrugada (10pm-6am)</option>
+                        </select>
+                    </div>
+                    
+                    {/* Botón para limpiar filtros */}
+                    {(selectedCity || timeFilter || selectedMoods.length > 0) && (
+                        <button className="clear-filters-btn" onClick={clearFilters}>
+                            Limpiar filtros
                         </button>
                     )}
                 </div>
-                
-                <div className="mood-filter-container">
-                    <div className="mood-filter-header">
-                        <h3>Filtrar por Mood:</h3>
-                        {selectedMoods.length > 0 && (
-                            <button className="clear-filters-btn" onClick={clearFilters}>
-                                Limpiar filtros
-                            </button>
-                        )}
-                    </div>
-                    
-                    <div className="mood-filter-options">
-                        {allMoods.map(mood => (
-                            <button 
-                                key={mood} 
-                                className={`mood-filter-btn ${selectedMoods.includes(mood) ? 'active' : ''}`}
-                                onClick={() => toggleMoodFilter(mood)}
-                            >
-                                {mood}
-                            </button>
-                        ))}
-                    </div>
-                </div>
             </div>
             
-            {/* Results Section */}
-            <div className="event-list-content">
-                {filteredEvents.length > 0 ? (
+            {/* Sección de filtro por Mood */}
+            <div className="mood-filter-container">
+                <div className="mood-filter-header">
+                    <h3>Filtrar por Mood:</h3>
+                </div>
+                
+                <div className="mood-filter-options">
+                    {moods.map(mood => (
+                        <button
+                            key={mood}
+                            className={`mood-filter-btn ${selectedMoods.includes(mood) ? 'active' : ''}`}
+                            onClick={() => toggleMoodFilter(mood)}
+                            data-mood={mood}
+                        >
+                            {mood}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+        
+        {/* Sección de resultados */}
+        <div className="event-list-content">
+            {filteredEvents.length > 0 ? (
+                <>
+                    {/* Cuadrícula de eventos */}
                     <div className="event-grid">
-                        {filteredEvents.map(event => (
+                        {filteredEvents.map((event, index) => (
                             <EventCard
                                 key={event.id}
                                 event={event}
@@ -144,10 +208,16 @@ const EventList: React.FC<EventListProps> = ({
                                 onDeleteEvent={onDeleteEvent}
                                 onEditEvent={onEditEvent}
                                 isFavorited={favoriteEvents.includes(event.id)}
+                                allEvents={filteredEvents}
+                                currentIndex={index}
+                                favoritedEventIds={favoriteEvents}
                             />
                         ))}
                     </div>
-                ) : (
+                </>
+            ) : (
+                <>
+                    {/* Estado vacío de eventos */}
                     <div className="event-empty-state">
                         <div className="event-empty-icon">
                             <i className="fas fa-calendar-day"></i>
@@ -160,14 +230,20 @@ const EventList: React.FC<EventListProps> = ({
                         ) : (
                             <>
                                 <p className="event-empty-text">No se encontraron eventos con los filtros actuales.</p>
-                                <p className="event-empty-help">Prueba con otros criterios de búsqueda o <button className="reset-search-btn" onClick={clearFilters}>elimina los filtros</button>.</p>
+                                <p className="event-empty-help">
+                                    Prueba con otros criterios de búsqueda o{' '}
+                                    <button className="reset-search-btn" onClick={clearFilters}>
+                                        elimina los filtros
+                                    </button>.
+                                </p>
                             </>
                         )}
                     </div>
-                )}
-            </div>
-        </section>
-    );
+                </>
+            )}
+        </div>
+    </section>
+);
 };
 
 export default EventList; 

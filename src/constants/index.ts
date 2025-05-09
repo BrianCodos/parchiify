@@ -1,10 +1,12 @@
 export const DEFAULT_MOODS: string[] = [
-    'Feliz',
-    'Triste',
-    'Emocionado',
-    'Relajado',
-    'Estresado',
-    'Energético',
-    'Cansado',
-    'Inspirado'
+    'Comer',
+    'Parejas',
+    'Fiesta',
+    'Niños',
+    'Familiar',
+    'Aventura',
+    'Cultural',
+    'Saludable',
+    'Show en vivo',
+    'Mascotas'
 ]; 

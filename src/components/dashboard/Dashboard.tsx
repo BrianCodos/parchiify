@@ -1,29 +1,24 @@
 import React, { useState } from 'react';
 import type { MoodHandlers } from '../../types';
+import './Dashboard.css';
 
-interface DashboardProps extends MoodHandlers {}
+interface DashboardProps extends MoodHandlers {
+    moods: string[];
+}
 
-const Dashboard: React.FC<DashboardProps> = ({ onAddMood, onDeleteMood }) => {
+const Dashboard: React.FC<DashboardProps> = ({ moods, onAddMood, onDeleteMood }) => {
     const [newMood, setNewMood] = useState<string>('');
-    const [moods, setMoods] = useState<string[]>(() => {
-        const savedMoods = localStorage.getItem('moods');
-        return savedMoods ? JSON.parse(savedMoods) : [
-            'Feliz', 'Triste', 'Enojado', 'Sorprendido', 'Emocionado'
-        ];
-    });
 
     const handleAddMood = () => {
         if (newMood.trim() && !moods.includes(newMood.trim())) {
-            const updatedMoods = [...moods, newMood.trim()];
-            setMoods(updatedMoods);
             onAddMood(newMood.trim());
             setNewMood('');
+        } else if (moods.includes(newMood.trim())) {
+            alert('Este mood ya existe.');
         }
     };
 
     const handleDeleteMood = (mood: string) => {
-        const updatedMoods = moods.filter(m => m !== mood);
-        setMoods(updatedMoods);
         onDeleteMood(mood);
     };
 
@@ -34,49 +29,44 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddMood, onDeleteMood }) => {
     };
 
     return (
-        <section className="rounded-lg p-6 sm:p-8 border border-gray-700">
-            <header className="mb-8 text-center">
-                <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Dashboard</h1>
-                <p className="text-gray-400 mt-2">Gestiona la configuración de tu aplicación</p>
-            </header>
-
-            <div className="mb-8">
-                <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-                    <i className="fas fa-sliders-h mr-3 text-indigo-400"></i>
-                    Gestionar Moods
-                </h2>
-                <p className="text-gray-400 mb-4">
+        <div className="dashboard-container">
+            <h2 className="dashboard-title">Dashboard</h2>
+            <p className="dashboard-subtitle">Gestiona la configuración de tu aplicación</p>
+            
+            <div className="dashboard-section">
+                <div className="dashboard-section-header">
+                    <i className="fas fa-sliders-h dashboard-section-icon"></i>
+                    <h3 className="dashboard-section-title">Gestionar Moods</h3>
+                </div>
+                <p className="dashboard-section-description">
                     Añade o elimina moods para clasificar tus eventos.
                 </p>
-
-                <div className="flex gap-2 mb-6">
+                
+                <div className="mood-form">
                     <input 
                         type="text"
                         placeholder="Nuevo mood..."
                         value={newMood}
                         onChange={(e) => setNewMood(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="flex-grow p-3 rounded-lg bg-gray-800 text-white border-0 shadow-md focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                        className="mood-input"
                     />
                     <button 
                         onClick={handleAddMood}
-                        className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mood-add-btn"
                     >
-                        <i className="fas fa-plus mr-2"></i>
+                        <i className="fas fa-plus"></i>
                         Añadir
                     </button>
                 </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                
+                <div className="mood-list">
                     {moods.map((mood) => (
-                        <div 
-                            key={mood}
-                            className="flex justify-between items-center p-3 rounded-lg border border-gray-700 text-white"
-                        >
-                            <span>{mood}</span>
+                        <div key={mood} className="mood-item">
+                            <span className="mood-name">{mood}</span>
                             <button
                                 onClick={() => handleDeleteMood(mood)}
-                                className="text-red-400 hover:text-red-300 p-1 rounded-full hover:bg-red-900/30 transition-all duration-200"
+                                className="mood-delete-btn"
                                 aria-label="Eliminar mood"
                                 title="Eliminar mood"
                             >
@@ -87,20 +77,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddMood, onDeleteMood }) => {
                 </div>
             </div>
 
-            <div>
-                <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-                    <i className="fas fa-chart-line mr-3 text-indigo-400"></i>
-                    Estadísticas
-                </h2>
-                <p className="text-gray-400 mb-4">
+            <div className="dashboard-section">
+                <div className="dashboard-section-header">
+                    <i className="fas fa-chart-line dashboard-section-icon"></i>
+                    <h3 className="dashboard-section-title">Estadísticas</h3>
+                </div>
+                <p className="dashboard-section-description">
                     Aquí encontrarás estadísticas sobre tus eventos.
                 </p>
-                <div className="text-center py-12 text-gray-400 border border-gray-700 border-dashed rounded-lg">
-                    <i className="fas fa-chart-bar fa-3x mb-4 text-gray-500"></i>
-                    <p>Las estadísticas estarán disponibles pronto.</p>
+                <div className="stats-container">
+                    <div className="stats-icon">
+                        <i className="fas fa-chart-bar"></i>
+                    </div>
+                    <p className="stats-text">Las estadísticas estarán disponibles pronto.</p>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 

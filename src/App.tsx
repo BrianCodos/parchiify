@@ -116,6 +116,11 @@ const App: React.FC = () => {
         setMoods(prevMoods => prevMoods.filter(mood => mood !== moodToDelete));
     };
 
+    const handleNewEvent = () => {
+        setEditingEvent(null);
+        setCurrentView('form');
+    };
+
     const renderCurrentView = () => {
         switch (currentView) {
             case 'form':
@@ -185,6 +190,7 @@ const App: React.FC = () => {
                         onDeleteEvent={deleteEventHandler}
                         favoriteEvents={favoriteEvents}
                         onEditEvent={editDraftOrEventHandler}
+                        moods={moods}
                     />
                 );
         }
@@ -192,7 +198,10 @@ const App: React.FC = () => {
 
     return (
         <div className="app-container">
-            <Navbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <Navbar 
+                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+                onNewEvent={handleNewEvent}
+            />
             <div className="app-content">
                 <Sidebar
                     setCurrentView={setCurrentView}

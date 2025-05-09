@@ -77,4 +77,48 @@
 .navbar-button:hover {
   color: white;
   background-color: rgba(99, 102, 241, 0.2);
+}
+
+.navbar-new-event-btn {
+  background: linear-gradient(to right, #818cf8, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-new-event-btn:hover {
+  background: linear-gradient(to right, #6366f1, #4f46e5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-new-event-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-new-event-btn i {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .navbar-new-event-btn span {
+    display: none;
+  }
+  
+  .navbar-new-event-btn {
+    padding: 0.5rem;
+  }
+  
+  .navbar-new-event-btn i {
+    font-size: 1rem;
+  }
 } 

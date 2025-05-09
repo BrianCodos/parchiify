@@ -1,13 +1,16 @@
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}", // Scan all relevant files in the src directory
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Outfit', 'system-ui', 'sans-serif'],
+      },
       colors: {
         // You can extend or override colors here if needed
         // For now, we ensure the default Tailwind colors are available, including all gray shades

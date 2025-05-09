@@ -7,6 +7,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s, box-shadow 0.2s;
   height: 100%;
+  cursor: pointer;
 }
 
 .event-card:hover {
@@ -241,4 +242,74 @@
 .event-card-notes i {
   margin-right: 8px;
   color: #64748b;
+}
+
+/* Two columns layout */
+.event-card-two-columns {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.event-card-image-container {
+  position: relative;
+  width: 40%;
+  height: auto;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.event-card-content {
+  width: 60%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Entry fee styling */
+.event-free-entry {
+  color: #4ade80;
+  font-weight: 500;
+}
+
+.event-cover-fee {
+  color: #fb923c;
+  font-weight: 500;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 640px) {
+  .event-card-two-columns {
+    flex-direction: column;
+  }
+  
+  .event-card-image-container {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .event-card-content {
+    width: 100%;
+  }
+}
+
+/* Add a subtle overlay effect on hover */
+.event-card:hover .event-card-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+/* Prevent actions buttons from triggering card click */
+.event-card-action-btn,
+.event-card-favorite-btn,
+.event-card-link {
+  position: relative;
+  z-index: 5;
 } 

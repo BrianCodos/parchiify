@@ -22,6 +22,9 @@ const EventForm: React.FC<EventFormProps> = ({
             place: '',
             city: '',
             date: '',
+            startTime: '',
+            endTime: '',
+            isFree: true,
             link: '',
             mood: '',
             notes: '',
@@ -44,7 +47,7 @@ const EventForm: React.FC<EventFormProps> = ({
     useEffect(() => {
         if (initialData) {
             const defaults: EventFormData = {
-                place: '', city: '', date: '', link: '', mood: '', notes: '', imageUrl: '',
+                place: '', city: '', date: '', startTime: '', endTime: '', isFree: true, link: '', mood: '', notes: '', imageUrl: '',
                 entryType: 'Gratuito', coverFee: '', selectedMoods: []
             };
             const updatedData = { 
@@ -56,7 +59,7 @@ const EventForm: React.FC<EventFormProps> = ({
             setImagePreview(initialData.imageUrl || null);
         } else {
             setFormData({
-                place: '', city: '', date: '', link: '', mood: '', notes: '', imageUrl: '',
+                place: '', city: '', date: '', startTime: '', endTime: '', isFree: true, link: '', mood: '', notes: '', imageUrl: '',
                 entryType: 'Gratuito', coverFee: '', selectedMoods: []
             });
             setImagePreview(null);
@@ -68,6 +71,7 @@ const EventForm: React.FC<EventFormProps> = ({
         if (!formData.place.trim()) newErrors.place = 'El lugar es requerido';
         if (!formData.city.trim()) newErrors.city = 'La ciudad es requerida';
         if (!formData.date) newErrors.date = 'La fecha es requerida';
+        if (!formData.startTime) newErrors.startTime = 'La hora de inicio es requerida';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -100,6 +104,17 @@ const EventForm: React.FC<EventFormProps> = ({
         if (errors[name as keyof EventFormData]) {
             setErrors(prev => ({ ...prev, [name]: undefined }));
         }
+    };
+
+    const handleToggleFree = () => {
+        setFormData(prev => {
+            const newIsFree = !prev.isFree;
+            return { 
+                ...prev, 
+                isFree: newIsFree,
+                coverFee: newIsFree ? '' : prev.coverFee 
+            };
+        });
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,6 +248,33 @@ const EventForm: React.FC<EventFormProps> = ({
                             />
                             {errors.date && <p className="error-message">{errors.date}</p>}
                         </div>
+
+                        <div className="form-row">
+                            <div className="form-group half">
+                                <label htmlFor="startTime">Hora de inicio:</label>
+                                <input
+                                    type="time"
+                                    id="startTime"
+                                    name="startTime"
+                                    value={formData.startTime || ''}
+                                    onChange={handleChange}
+                                    className={errors.startTime ? "form-input error" : "form-input"}
+                                />
+                                {errors.startTime && <p className="error-message">{errors.startTime}</p>}
+                            </div>
+                            
+                            <div className="form-group half">
+                                <label htmlFor="endTime">Hora de fin:</label>
+                                <input
+                                    type="time"
+                                    id="endTime"
+                                    name="endTime"
+                                    value={formData.endTime || ''}
+                                    onChange={handleChange}
+                                    className="form-input"
+                                />
+                            </div>
+                        </div>
                         
                         <div className="form-group">
                             <label htmlFor="link">Enlace (Opcional):</label>
@@ -270,21 +312,23 @@ const EventForm: React.FC<EventFormProps> = ({
                             </div>
                         </div>
                         
-                        <div className="entry-fee-grid">
-                            <div className="form-group">
-                                <label htmlFor="entryType">Tipo Entrada:</label>
-                                <input
-                                    type="text"
-                                    id="entryType"
-                                    name="entryType"
-                                    value={formData.entryType || 'Gratuito (Desactivado)'}
-                                    disabled
-                                    className="form-input disabled"
-                                />
+                        <div className="price-section">
+                            <div className="free-toggle">
+                                <label className="toggle-label">
+                                    <span>Gratuito</span>
+                                    <div className="toggle-switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.isFree}
+                                            onChange={handleToggleFree}
+                                        />
+                                        <span className="toggle-slider"></span>
+                                    </div>
+                                </label>
                             </div>
                             
                             <div className="form-group">
-                                <label htmlFor="coverFee">Cover (COP):</label>
+                                <label htmlFor="coverFee">Precio (COP):</label>
                                 <input
                                     type="text"
                                     id="coverFee"
@@ -293,6 +337,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                     onChange={handleChange}
                                     className="form-input"
                                     placeholder="0"
+                                    disabled={formData.isFree}
                                 />
                             </div>
                         </div>
@@ -309,6 +354,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                     type="button"
                                     onClick={() => toggleMood(mood)}
                                     className={formData.selectedMoods?.includes(mood) ? "mood-button selected" : "mood-button"}
+                                    data-mood={mood}
                                 >
                                     {mood}
                                 </button>
