@@ -110,7 +110,7 @@ return (
     <section className="event-list-container">
         {/* Sección de encabezado */}
         <header className="event-list-header">
-            <h1 className="event-list-title">Jamás te volverás a perder de nada</h1>
+            <h1 className="event-list-title">Jamás te volverás a perder de nada, tenemos el plan perfecto para tu estado de animo</h1>
         </header>
         
         {/* Sección de búsqueda y filtros */}
@@ -175,13 +175,13 @@ return (
             
             {/* Sección de filtro por Mood */}
             <div className="mood-filter-container">
-                <div className="mood-filter-header">
-                    <h3>Filtrar por Mood:</h3>
-                </div>
+                
                 
                 <div className="mood-filter-options">
                     {moods.map(mood => (
-                        <button
+                        <div className="mood-filter-btn-container">
+                            <h2>Imagen</h2>
+                             <button
                             key={mood}
                             className={`mood-filter-btn ${selectedMoods.includes(mood) ? 'active' : ''}`}
                             onClick={() => toggleMoodFilter(mood)}
@@ -189,6 +189,8 @@ return (
                         >
                             {mood}
                         </button>
+                        </div>
+                       
                     ))}
                 </div>
             </div>
