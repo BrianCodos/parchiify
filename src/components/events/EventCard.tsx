@@ -145,6 +145,11 @@ const EventCard: React.FC<EventCardProps> = ({
                             </button>
                         </div>
                         
+                        {/* Title overlay - Nuevo posicionamiento del título */}
+                        <div className="event-card-overlay-title">
+                            <h3 className="event-card-title">{event.place}</h3>
+                        </div>
+                        
                         {/* Mood Tags overlay */}
                         {moodTags.length > 0 && (
                             <div className="event-card-overlay-moods">
@@ -165,8 +170,6 @@ const EventCard: React.FC<EventCardProps> = ({
                     
                 {/* Event Content Section (below image) */}
                 <div className="event-card-content">
-                    <h3 className="event-card-title">{event.place}</h3>
-                    
                     <div className="event-card-info">
                         <div className="event-info-item">
                             <i className="fas fa-map-marker-alt"></i>
@@ -203,16 +206,6 @@ const EventCard: React.FC<EventCardProps> = ({
                             </a>
                         )}
                     </div>
-                    
-                    {/* Event Notes */}
-                    {/* {event.notes && (
-                        <div className="event-card-notes">
-                            <p>
-                                <i className="fas fa-sticky-note"></i>
-                                {event.notes}
-                            </p>
-                        </div>
-                    )} */}
                 </div>
             </div>
 

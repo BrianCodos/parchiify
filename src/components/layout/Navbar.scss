@@ -124,4 +124,40 @@
       }
     }
   }
+}
+
+.profile-item {
+  margin-left: $spacing-sm;
+}
+
+.navbar-profile-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-lg;
+  @include transition;
+  
+  &:hover {
+    background-color: rgba($color-bg-secondary, 0.5);
+  }
+}
+
+.navbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid $color-primary-light;
+}
+
+.profile-text {
+  color: $color-text;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  display: none;
+  
+  @include screen-md {
+    display: block;
+  }
 } 
